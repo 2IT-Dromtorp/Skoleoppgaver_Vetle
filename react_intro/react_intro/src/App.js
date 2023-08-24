@@ -1,25 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
+import MyButtonImport from './MyButton';
+import ProfileImport from './Profile';
+import { useState } from "react";
 
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  let content;
+
+  if (isLoggedIn){
+    content = <ProfileImport />;
+  } else {
+    content = <MyButtonImport />
+  }
+
+  function isLoggedInChange(boolean) {
+    setIsLoggedIn(boolean);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>React intro</h1>
+        <input type="checkbox" onClick={() => isLoggedInChange(!isLoggedIn)}/>
+
+        {content}
+
       </header>
     </div>
   );
+
+}
+
+function MyButton() {
+  const [count, setCount] = useState(0);
+    
+  function incrementNumber(){
+      setCount(count + 1);
+  }
+
+  return(
+      <button onClick={incrementNumber}>{count}</button>
+  )
 }
 
 export default App;
