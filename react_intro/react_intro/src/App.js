@@ -1,8 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState } from "react";
 import MyButtonImport from './MyButton';
 import ProfileImport from './Profile';
-import { useState } from "react";
+import ListImport from './List';
 
 function App() {
 
@@ -26,24 +27,11 @@ function App() {
         <h1>React intro</h1>
         <input type="checkbox" onClick={() => isLoggedInChange(!isLoggedIn)}/>
 
+        <ListImport />;
+
         {content}
 
       </header>
     </div>
   );
-
 }
-
-function MyButton() {
-  const [count, setCount] = useState(0);
-    
-  function incrementNumber(){
-      setCount(count + 1);
-  }
-
-  return(
-      <button onClick={incrementNumber}>{count}</button>
-  )
-}
-
-export default App;
