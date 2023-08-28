@@ -5,7 +5,7 @@ import MyButtonImport from './MyButton';
 import ProfileImport from './Profile';
 import ListImport from './List';
 
-function App() {
+export default function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
