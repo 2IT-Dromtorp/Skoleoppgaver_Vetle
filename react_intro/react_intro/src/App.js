@@ -4,6 +4,7 @@ import { useState } from "react";
 import MyButtonImport from './MyButton';
 import ProfileImport from './Profile';
 import ListImport from './List';
+import WeatherImport from './Weather.js';
 
 export default function App() {
 
@@ -26,7 +27,7 @@ export default function App() {
       <header className="App-header">
         <h1>React intro</h1>
         <input type="checkbox" onClick={() => isLoggedInChange(!isLoggedIn)}/>
-
+        <WeatherImport />
         <ListImport />
 
         {content}
