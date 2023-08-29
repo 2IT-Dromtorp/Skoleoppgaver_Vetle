@@ -1,13 +1,5 @@
 import { useState } from "react";
 
-export default function MyButtonExport() {
-    return (
-        <div>
-            <MyButton />
-        </div>
-    );
-}
-
 function MyButton() {
     const [count, setCount] = useState(0);
       
@@ -18,4 +10,12 @@ function MyButton() {
     return(
         <button onClick={incrementNumber}>{count}</button>
     )
+}
+
+export default function MyButtonExport() {
+    return (
+        <div>
+            <MyButton />
+        </div>
+    );
 }
