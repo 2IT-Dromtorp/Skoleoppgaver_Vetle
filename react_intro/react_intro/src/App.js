@@ -27,7 +27,7 @@ export default function App() {
         <h1>React intro</h1>
         <input type="checkbox" onClick={() => isLoggedInChange(!isLoggedIn)}/>
 
-        <ListImport />;
+        <ListImport />
 
         {content}
 

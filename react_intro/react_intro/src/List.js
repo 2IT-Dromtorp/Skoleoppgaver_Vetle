@@ -23,5 +23,5 @@ function CreateList(){
 export default function List() {
     return (
         <CreateList />
-    );
+    )
 }
