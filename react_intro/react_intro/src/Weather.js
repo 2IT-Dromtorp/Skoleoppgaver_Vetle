@@ -1,17 +1,26 @@
-let weatherJSON;
+import React, { useState, useEffect } from 'react';
 
-function FetchAPI(){
-    fetch("https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=59.93&lon=10.72")
-    .then((Response) => Response.json())
-    .then((data) => {weatherJSON = data})
-    .then(() => console.log(weatherJSON))
-    return(
-        <p>{weatherJSON.properties.timeseries[0].data.instant.details.air_temperature}</p>
-    )
+function fetchWeatherData() {
+    return fetch("https://api.met.no/weatherapi/locationforecast/2.0/complete?lat=59.93&lon=10.72")
+        .then(response => response.json())
+        .then(data => {
+            return data.properties.timeseries[0].data.instant.details.air_temperature;
+        })
 }
 
-export default function weather(){
-    return(
-        <FetchAPI />
+export default function Weather() {
+    const [weatherData, setWeatherData] = useState(null);
+
+    useEffect(() => {
+        fetchWeatherData()
+            .then(temp => {
+                setWeatherData(temp);
+            });
+    }, []);
+
+    return (
+        <div>
+            {weatherData && <p>{weatherData}</p>}
+        </div>
     );
-};
+}
