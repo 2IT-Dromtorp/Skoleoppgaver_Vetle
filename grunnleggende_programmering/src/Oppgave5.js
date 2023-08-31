@@ -2,23 +2,27 @@ import { useState } from "react"
 
 function HigherOrLower(){
     const [RanNum, setRanNum] = useState(0);
-    let Result;
-    let Computerguess;
+    let ResultsArray = [];
+    let Computerguess = 25;
+    let Results;
 
-    if (Computerguess == RanNum){
-        Result = "Riktig tall!";
+    while (Computerguess != RanNum && RanNum > 0 && RanNum < 50){
+        if(Computerguess < RanNum){
+            Computerguess = Math.round(Computerguess * 1.5);
+        }
+        else{
+            Computerguess = Math.round(Computerguess * 0.5);
+        }
+        ResultsArray.push(Computerguess);
     }
-    else if(Computerguess < RanNum){
-        Result = "Tallet ditt er lavere";
-    }
-    else{
-        Result = "Tallet ditt er høyere";
+
+    for (let i in ResultsArray){
+        Results = Results + ', ' + ResultsArray[i]; 
     }
 
     return(
         <>
-            <input type="text" onChange={e => setRanNum(e.target.value)} placeholder="Hvilket tall gjetter du?"/>
-            {Result}
+            <input type="text" onChange={e => setRanNum(e.target.value)} placeholder="Hvilket tall skal datamaskin gjette på? (mellom 1 og 49)"/>
         </>
     )
 }
