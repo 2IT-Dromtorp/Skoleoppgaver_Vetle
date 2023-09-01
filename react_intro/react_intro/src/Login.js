@@ -5,10 +5,17 @@ import LoggedOut from './LoggedOut';
 export default function LoginPage(){
 
     let Credentials = {
-        usernames: ['MathoePanKan', 'Frikk2015', 'EliasHGod'],
-        passwords: ['Gris123', '#KniverIRyggen', 'TheGOAT']};
+        User:[
+        {Username: "MathoePanKan", Password: "Gris123"},
+        {Username: "Frikk2015", Password: "#KniverIRyggen"},
+        {Username: "EliasHGod", Password: "TheGOAT"},
+        {Username: "JoakimHusefest", Password: "Laerer23-24"}
+        ]
+    }
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [UsernameInput, setUsernameInput] = useState();
+    const [PasswordInput, setPasswordInput] = useState();
 
     let logInContent;
     let logInButtonText;
@@ -23,9 +30,9 @@ export default function LoginPage(){
     } else {
         logInContent = (
             <div>
-                <input type="text" id="username" placeholder="Username"></input>
+                <input type="text" placeholder="Username" onChange={e => setUsernameInput(e.target.value)}></input>
                 <br />
-                <input type="password" id="password" placeholder="Password"></input>
+                <input type="password" placeholder="Password" onChange={e => setPasswordInput(e.target.value)}></input>
                 <LoggedOut />
             </div>
     )
@@ -33,11 +40,16 @@ export default function LoginPage(){
     }
   
     function isLoggedInChange(boolean) {
-        for (let x in Credentials.usernames){
-            if (username.value === Credentials.usernames[x] && password.value === Credentials.passwords[x]){
-                setIsLoggedIn(boolean);
-                } 
+        if (!isLoggedIn){
+            for (let i in Credentials.User){
+                if (UsernameInput === Credentials.User[i].Username && PasswordInput === Credentials.User[i].Password){
+                    setIsLoggedIn(boolean);
+                    setUsernameInput();
+                    setPasswordInput();
+                }
             }
+        } else {
+            setIsLoggedIn(boolean);
         }
     }
     return (
