@@ -1,9 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from "react";
-import ListImport from './List';
-import WeatherImport from './Weather.js';
-import LogInImport from './Login.js';
+import List from './List';
+import Weather from './Weather.js';
+import LogIn from './Login.js';
 
 export default function App() {
 
@@ -11,7 +11,7 @@ export default function App() {
     <div className="App">
       <header className="App-header">
         <h1>React intro</h1>
-        <LogInImport />
+        <LogIn />
       </header>
     </div>
   );
