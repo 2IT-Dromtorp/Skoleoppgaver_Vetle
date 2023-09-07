@@ -14,39 +14,34 @@ export default function DigitalClock(){
 
     if (hh < 10){
         hh = "0" + time.getHours()
-    } else {
-        hh = time.getHours()
     }
     if (mm < 10){
         mm = "0" + time.getMinutes()
-    } else {
-        mm = time.getMinutes()
     }
     if (ss < 10){
         ss = "0" + time.getSeconds()
-    } else {
-        ss = time.getSeconds()
-    }
-    if (ss == 0){
-        setIsExploding(true);
-    }
-    else {
-        setIsExploding(false);
     }
 
     useEffect(() => {
         const myInterval = setInterval(() =>{
             setTime(new Date)
         }, 250)
+
+        if (ss == 0){
+            setIsExploding(true);
+        } else {
+            setIsExploding(false)
+        }
+
         return () =>  clearInterval(myInterval);
     })
 
     return(
         <div className="App">
             <header className="App-header">
+                {isExploding && <ConfettiExplosion />}
                 <h1>Klokke</h1>
                 <p>{hh}:{mm}:{ss}</p>
-                {isExploding && <ConfettiExplosion />}
             </header>
         </div>
     )
