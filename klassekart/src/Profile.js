@@ -1,7 +1,7 @@
 import { Elever } from './App';
 
 export default function Profile({student}){
-    console.log(student)
+    console.log("startet profile function")
     return(
         <>
             <h2>{Elever[student].fornavn} {Elever[student].etternavn}</h2>
