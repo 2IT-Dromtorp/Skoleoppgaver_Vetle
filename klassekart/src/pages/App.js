@@ -1,5 +1,4 @@
-import './App.css';
-import ChangeContent from './ChangeContent';
+import '../App.css';
 
 export const Elever = [
   {fornavn: "Matheo", etternavn: "Kant Pangopoulos", epost: "matheop@viken.no", klasse: "2ITB", fellesfaggruppe: "2IM2"},
@@ -23,7 +22,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <ChangeContent typeOfContent={"classmap"} studentIndex={0} />
       </header>
     </div>
   );
