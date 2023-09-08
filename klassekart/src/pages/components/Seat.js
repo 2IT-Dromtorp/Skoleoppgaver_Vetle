@@ -1,4 +1,4 @@
-import { Elever } from './App.js'
+import { Elever } from '../App.js'
 import { useNavigate } from 'react-router-dom';
 
 const GetStudentName = (name) => {

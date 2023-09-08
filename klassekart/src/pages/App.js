@@ -1,4 +1,5 @@
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
 
 export const Elever = [
   {fornavn: "Matheo", etternavn: "Kant Pangopoulos", epost: "matheop@viken.no", klasse: "2ITB", fellesfaggruppe: "2IM2"},
@@ -18,10 +19,11 @@ export const Elever = [
 ]
 
 function App() {
-
+  const navigate = useNavigate();
   return (
     <div className="App">
       <header className="App-header">
+        <button onClick={() => navigate('/classmap')}>Til klassekartet</button>
       </header>
     </div>
   );

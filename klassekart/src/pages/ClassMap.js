@@ -1,38 +1,29 @@
 import '../App.css';
-import GetStudentName from './Seat.js'
+import { Elever } from './App';
+import GetStudentName from './components/Seat.js'
+import Filter from './components/Filter.js'
 
 const ClassMap = () => {
     return(
-    <div className='App'>
-        <header className='App-header'>
-            <div className="seterad">
+        <div className='App'>
+            <header className='App-header'>
+                <Filter />
                 {GetStudentName("Andreas")}
                 {GetStudentName("Ahmad")}
-            </div>
-            <div className="seterad">
                 {GetStudentName("Theodor")}
                 {GetStudentName("Alva")}
                 {GetStudentName("Silas")}
-            </div>
-            <div className="seterad">
                 {GetStudentName("Philip")}
                 {GetStudentName("Mattis")}
-            </div>
-            <div className="seterad">
                 {GetStudentName("Axel")}
                 {GetStudentName("Vetle")}
                 {GetStudentName("Kristoffer")}
-            </div>
-            <div className="seterad">
                 {GetStudentName("Gabriel")}
-            </div>
-            <div className="seterad">
                 {GetStudentName("Johannes")}
                 {GetStudentName("Elias")}
                 {GetStudentName("Matheo")}
-            </div>
-        </header>
-      </div>
+            </header>
+        </div>
     )
 }
 

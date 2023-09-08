@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
-import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
-import ClassMap from './pages/ClassMap';
-import Profile from './pages/Profile';
+import App from './pages/App.js';
+import ClassMap from './pages/ClassMap.js';
+import Profile from './pages/Profile.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
