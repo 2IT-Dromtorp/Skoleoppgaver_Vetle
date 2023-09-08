@@ -16,7 +16,7 @@ const Profile = () => {
                 <p>Epost: {Elever[elevIndex].epost}</p>
                 <p>Klasse: {Elever[elevIndex].klasse}</p>
                 <p>fellesfaggruppe: {Elever[elevIndex].fellesfaggruppe}</p>
-                <button onClick={() => navigate('../classmap/')}>Tilbake til klassekart</button>
+                <button onClick={() => navigate('../classmap')}>Tilbake til klassekart</button>
             </header>
         </div>
     )

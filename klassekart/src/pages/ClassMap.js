@@ -8,20 +8,6 @@ const ClassMap = () => {
         <div className='App'>
             <header className='App-header'>
                 <Filter />
-                {GetStudentName("Andreas")}
-                {GetStudentName("Ahmad")}
-                {GetStudentName("Theodor")}
-                {GetStudentName("Alva")}
-                {GetStudentName("Silas")}
-                {GetStudentName("Philip")}
-                {GetStudentName("Mattis")}
-                {GetStudentName("Axel")}
-                {GetStudentName("Vetle")}
-                {GetStudentName("Kristoffer")}
-                {GetStudentName("Gabriel")}
-                {GetStudentName("Johannes")}
-                {GetStudentName("Elias")}
-                {GetStudentName("Matheo")}
             </header>
         </div>
     )
