@@ -1,7 +1,7 @@
 import '../App.css';
 import { Elever } from './App';
-import GetStudentName from './components/Seat.js'
-import Filter from './components/Filter.js'
+import GetStudentName from './components/Seat.js';
+import Filter from './components/Filter.js';
 
 const ClassMap = () => {
     return(
