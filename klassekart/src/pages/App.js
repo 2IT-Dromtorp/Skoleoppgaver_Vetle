@@ -23,6 +23,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <button onClick={() => navigate('/classlist')}>Til klasseliste</button>
         <button onClick={() => navigate('/classmap')}>Til klassekartet</button>
       </header>
     </div>

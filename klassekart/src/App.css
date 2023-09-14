@@ -2,16 +2,11 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* @media (prefers-reduced-motion: no-preference) {
+  body, button, div, p {
+    animation: App-logo-spin infinite 1s ease-in-out;
   }
-}
+} */
 
 .App-header {
   background-color: #252422;
@@ -24,10 +19,6 @@
   color: white;
 }
 
-.App-link {
-  color: #ccc5b9;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,9 +27,29 @@
     transform: rotate(360deg);
   }
 }
+
 button {
   width: 45vw;
   height: 6vh;
+  border-radius: 4px 16px 4px 16px;
+  background-color: #252422;
+  color: #aaaaaa;
+  margin: 1vh;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+  cursor: pointer;
+  border: outset #1a0044 3px;
+  pointer-events: auto;
+}
+button:hover {
+  border-radius: 16px 4px 16px 4px;
+  background-color: #1a0044;
+  color: #ffffff;
+  border: outset #FF3F15 3px;
+}
+.classgrid button {
+  width: 100%;
+  height: 100%;
   border-radius: 4px 16px 4px 16px;
   background-color: #252422;
   color: #aaaaaa;
@@ -47,13 +58,15 @@ button {
   transition-timing-function: ease;
   cursor: pointer;
   border: outset #1a0044 3px;
+  pointer-events: auto;
 }
-button:hover {
+.classgrid button:hover {
   border-radius: 16px 4px 16px 4px;
   background-color: #1a0044;
   color: #ffffff;
   border: outset #FF3F15 3px;
 }
+
 .filter {
   position: absolute;
   display: flex;
@@ -66,6 +79,7 @@ button:hover {
   border-radius: 12px;
   border: outset #1a0044 4px;
 }
+
 .eleverboks {
   overflow: auto;
   width: 48vw;
@@ -75,19 +89,57 @@ button:hover {
   border-radius: 8px;
   padding: 2vh 0vh 2vh 0vh;
 }
+
 ::-webkit-scrollbar{
   width: 15px;
   padding: 2px;
 }
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px grey; 
-  border-radius: 10px;
+  border-radius: 1000px;
 }
 ::-webkit-scrollbar-thumb {
   background: #1a0044; 
-  border-radius: 10px;
+  border-radius: 1000px;
   border: outset #252422 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
   border: outset #FF3F15 2px; 
+}
+
+.profile {
+  border-radius: 4px 16px 4px 16px;
+  border: outset #1a0044 4px;
+  background-color: #403d39;
+  pointer-events: none;
+  transition-duration: 200ms;
+}
+div.profile:hover {
+  border-radius: 16px 4px 16px 4px;
+}
+
+.classgrid {
+  display: grid;
+  gap: 5vh;
+  grid-template-columns: 12vw 12vw 12vw 12vw 12vw 12vw;
+  grid-template-rows: 10vh 10vh 10vh 10vh 10vh;
+  background-color: #403d39;
+  border: outset #1a0044 4px;
+  border-radius: 8px;
+  padding: 4vh;
+}
+.backToMenu {
+  position: absolute;
+  left: 2vw;
+  top: 2vh;
+  width: 10vw;
+  background-color: #252422;
+  box-shadow: 0px 0px 4px 4px #1a0044;
+}
+.reverse {
+  transform: rotate(180deg);
+  border: inset #1a0044 4px;
+}
+.reverse div {
+  transform: rotate(180deg);
 }

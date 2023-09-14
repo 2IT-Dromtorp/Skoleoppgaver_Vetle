@@ -4,16 +4,18 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import App from './pages/App.js';
-import ClassMap from './pages/ClassMap.js';
+import Classlist from './pages/Classlist.js';
 import Profile from './pages/Profile.js';
+import Classmap from './pages/Classmap.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App />} />
-            <Route path="/classmap" element={<ClassMap />} />
+            <Route path="/classlist" element={<Classlist />} />
             <Route path="/profile/:elevIndex" element={<Profile />} />
+            <Route path="/classmap" element={<Classmap />} />
         </Routes>
     </BrowserRouter>
 );
