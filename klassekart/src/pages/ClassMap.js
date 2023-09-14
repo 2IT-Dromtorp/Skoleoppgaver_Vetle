@@ -1,19 +1,20 @@
 import '../App.css';
 import GetStudentName from "./components/Seat";
-import { useNavigate } from 'react-router-dom';
+import { useAsyncError, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const Classmap = () => {
     const navigate = useNavigate();
     let className = "classgrid"
 
-    function ChangePOV(POV){
-        if (POV){
-            className += "classgrid reverse"
-            console.log(POV)
-        } else{
-            className = "classgrid"
-            console.log(POV)
-        }
+    const [elevPOV, setElevPOV] = useState(false)
+
+    if (elevPOV){
+        className = "classgrid reverse"
+        console.log(elevPOV)
+    } else{
+        className = "classgrid"
+        console.log(elevPOV)
     }
     
     return(
@@ -52,7 +53,7 @@ const Classmap = () => {
                     <div><GetStudentName name={"Ahmad"}/></div>
                     <div><GetStudentName name={"Andreas"}/></div>
                 </div>
-                <label>Elev POV: <input type='checkbox' onChange={e => ChangePOV(e.target.checked)}></input></label>
+                <label>Elev POV: <input type='checkbox' onChange={e => setElevPOV(e.target.checked)}></input></label>
             </header>
         </div>
         
