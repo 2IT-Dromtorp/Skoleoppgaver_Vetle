@@ -53,7 +53,7 @@ const Classmap = () => {
                     <div><GetStudentName name={"Ahmad"}/></div>
                     <div><GetStudentName name={"Andreas"}/></div>
                 </div>
-                <label>Elev POV: <input type='checkbox' onChange={e => setElevPOV(e.target.checked)}></input></label>
+                <label>Elev POV: <input type='checkbox' defaultChecked onChange={e => setElevPOV(!e.target.checked)}></input></label>
             </header>
         </div>
         
