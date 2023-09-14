@@ -52,7 +52,7 @@ button:hover {
   border-radius: 16px 4px 16px 4px;
   background-color: #1a0044;
   color: #ffffff;
-  border: outset red 3px;
+  border: outset #FF3F15 3px;
 }
 .filter {
   position: absolute;
@@ -76,5 +76,18 @@ button:hover {
   padding: 2vh 0vh 2vh 0vh;
 }
 ::-webkit-scrollbar{
-  display: none;
+  width: 15px;
+  padding: 2px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a0044; 
+  border-radius: 10px;
+  border: outset #252422 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  border: outset #FF3F15 2px; 
 }
