@@ -9,7 +9,7 @@ const List = () => {
     let Tasks = [];
     for (let i in todoTasks.tasks){
         if (!todoTasks.tasks[i].isCompleted){
-            Tasks.push(<ListElement name={todoTasks.tasks[i].name} description={todoTasks.tasks[i].description} isCompleted={todoTasks.tasks[i].isCompleted} index={i} key={i} />)
+            Tasks.push(<ListElement index={i} key={i} />)
         }
     }
 
