@@ -2,16 +2,33 @@ import { useEffect, useState } from "react";
 import { todoTasks } from "./App";
 import ListElement from "./ListElement";
 
+let Tasks = [];
+
 const List = () => {
     const [Name, setName] = useState("");
     const [Description, setDescription] = useState("");
+    const [shouldUpdateList, setShouldUpdateList] = useState(true);
+    const [includeCompleted, setIncludeCompleted] = useState();
 
-    let Tasks = [];
-    for (let i in todoTasks.tasks){
-        if (!todoTasks.tasks[i].isCompleted){
-            Tasks.push(<ListElement index={i} key={i} />)
-        }
+    const handleList = () => {
+        setShouldUpdateList(true);
     }
+
+    if (shouldUpdateList){
+        Tasks = [];
+        for (let i in todoTasks.tasks){
+            if (!todoTasks.tasks[i].isCompleted && !includeCompleted){
+                Tasks.push(<ListElement index={i} updateList={handleList} key={i} />)
+            } else if (includeCompleted) {
+                Tasks.push(<ListElement index={i} updateList={handleList} key={i} />)
+            }
+        }
+        setShouldUpdateList(false);
+    }
+
+    useEffect(() => {
+        handleList();
+    }, [includeCompleted])
 
     console.log(Tasks)
 
@@ -21,6 +38,7 @@ const List = () => {
         setName("")
         setDescription("")
         console.log(todoTasks);
+        setShouldUpdateList(true);
     }
 
     return(
@@ -33,6 +51,7 @@ const List = () => {
                     <input type="submit" />
                 </form>
             </div>
+            <input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} />
         </div>
     )
 }
