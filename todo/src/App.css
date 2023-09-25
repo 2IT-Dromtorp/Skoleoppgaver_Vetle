@@ -28,6 +28,33 @@
   color: #61dafb;
 }
 
+.listElement {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  border: outset #FF0035 4px;
+  border-radius: 12px;
+  width: 50vw;
+  height: 10vh;
+  padding: 0vh 2vw;
+  background-color: #0E131F;
+}
+
+.listElement button {
+  background-color: #38405F;
+  color: white;
+  padding: 1vh 1vw;
+  border: inset #FF0035 2px;
+  border-radius: 4px 0px;
+  transition-duration: 400ms;
+  cursor: pointer;
+}
+.listElement button:hover {
+  background-color: #8B939C;
+  color: black;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
