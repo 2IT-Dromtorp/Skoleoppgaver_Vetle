@@ -30,14 +30,11 @@ const List = () => {
         handleList();
     }, [includeCompleted])
 
-    console.log(Tasks)
-
     const handleSubmit = (event) => {
         event.preventDefault();
         todoTasks.tasks.push({"name": Name, "description": Description, "isCompleted": false});
         setName("")
         setDescription("")
-        console.log(todoTasks);
         setShouldUpdateList(true);
     }
 

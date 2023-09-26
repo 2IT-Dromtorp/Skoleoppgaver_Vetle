@@ -1,5 +1,6 @@
 {
     "tasks": [
-        {"name": "Oppgave1","description": "Første oppgave","isCompleted": false}
+        {"name": "Oppgave1","description": "Første oppgave","isCompleted": false},
+        {"name": "h","description": "h","isCompleted": false}
     ]
 }
