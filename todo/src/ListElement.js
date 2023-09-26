@@ -13,16 +13,17 @@ const ListElement = ({index, updateList}) => {
     }
 
     function DeleteTask() {
-        let todoTasksCopy = [...todoTasks.tasks];
-        todoTasks.tasks = [];
-        for (let i in todoTasksCopy){
-            if (i != index){
-                console.log("Keep task", i, todoTasksCopy[i]);
-                todoTasks.tasks.push(todoTasksCopy[i])
-            } else {
-                console.log("Delete task", i, todoTasksCopy[i]);
-            }
-        }
+        // let todoTasksCopy = [...todoTasks.tasks];
+        // todoTasks.tasks = [];
+        // for (let i in todoTasksCopy){
+        //     if (i != index){
+        //         console.log("Keep task", i, todoTasksCopy[i]);
+        //         todoTasks.tasks.push(todoTasksCopy[i])
+        //     } else {
+        //         console.log("Delete task", i, todoTasksCopy[i]);
+        //     }
+        // }
+        todoTasks.tasks.splice(index, 1);
         console.log("Updated todoTasks", todoTasks);
         updateList()
     }
