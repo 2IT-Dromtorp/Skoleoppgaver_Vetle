@@ -1,15 +1,16 @@
+import { useState } from 'react';
 import './App.css';
 import List from './List';
 import data from './todo.json';
 
-export let todoTasks = data;
-console.log(todoTasks)
-
 function App() {
+
+  const [todoTasks, setTodoTasks] = useState(data)
+
   return (
     <div className="App">
       <header className="App-header">
-        <List />
+        <List todoTasks={todoTasks}/>
       </header>
     </div>
   );
