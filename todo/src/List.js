@@ -3,39 +3,26 @@ import ListElement from "./ListElement";
 
 let Tasks = [];
 
-const List = ({todoTasks}) => {
+const List = ({todoTasks, setTodoTasks}) => {
     const [Name, setName] = useState("");
     const [Description, setDescription] = useState("");
     const [includeCompleted, setIncludeCompleted] = useState();
 
-    // Tasks = [];
-    // for (let i in todoTasks.tasks){
-    //     if (!todoTasks.tasks[i].isCompleted && !includeCompleted){
-    //         Tasks.push(<ListElement index={i} todoTasks={todoTasks} updateList={handleList} key={i} />)
-    //     } else if (includeCompleted) {
-    //         Tasks.push(<ListElement index={i} todoTasks={todoTasks} updateList={handleList} key={i} />)
-    //     }
-    // }
-
-    useEffect(() => {
-
-    }, [includeCompleted])
-
-    const todoItems = todoTasks.tasks.map((todo) => 
-        {if (!todo.isCompleted && !includeCompleted){
+    let todoItems = todoTasks.map((todo, index) => {
+        if (!todo.isCompleted && !includeCompleted){
             return(
-                <ListElement index={todo.id} todoTasks={todoTasks} key={todo.id + 1} />
+                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={todo.id} />
             )
         } else if (includeCompleted) {
             return(
-                <ListElement index={todo.id} todoTasks={todoTasks} key={todo.id + 1} />
+                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={todo.id} />
             )
-        }}
-    )
+        }
+    })
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        todoTasks.tasks.push({"name": Name, "description": Description, "isCompleted": false, "id": todoTasks.tasks.length});
+        todoTasks.push({"name": Name, "description": Description, "isCompleted": false, "id": todoTasks.length});
         setName("")
         setDescription("")
         console.log(todoTasks)
@@ -51,7 +38,7 @@ const List = ({todoTasks}) => {
                     <input type="submit" />
                 </form>
             </div>
-            <input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} />
+            <label>Vis ferdige oppgaver<input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} /></label>
         </div>
     )
 }

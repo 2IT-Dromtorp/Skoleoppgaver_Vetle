@@ -7,6 +7,26 @@
   pointer-events: none;
 }
 
+input {
+  background-color: #38405F;
+  color: white;
+  border: outset #FF0035 2px;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+::placeholder {
+  color: #ccc;
+}
+
+label {
+  background-color: #38405F;
+  color: #ccc;
+  border: outset #FF0035 2px;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
