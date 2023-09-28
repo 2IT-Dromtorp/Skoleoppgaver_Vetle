@@ -17,17 +17,12 @@ app.get("/api/todo", (req, res) => {
 
 
 app.post("/api/todo", (req, res) => {
-    console.log(req.body)
     let raw = req.body;
-    let todoTasks = JSON.parse(raw);
+    //let todoTasks = JSON.parse(raw);
+    console.log(raw)
 
-    try { 
-        fs.writeFile('./todo.json', JSON.stringify(todoTasks), (err) => {
-            console.log(req.body)
-        })
-        console.log(req.body)
-    }
-    catch (error) {
-        console.log("error", error)
-    }
+    fs.writeFile('./todo.json', '[{"name":"Oppgave1","description":"Første oppgave","isCompleted":false,"id":1}]', function (err) {
+        if (err) throw err
+        console.log("saved")
+    })
 })

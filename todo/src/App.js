@@ -13,7 +13,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const response = await;
     fetch("/api/todo", {
       method: 'POST',
       headers: {
@@ -22,10 +21,6 @@ function App() {
       },
       body: JSON.stringify(todoTasks),
       })
-
-      response.json().then(data => {
-        console.log(JSON.stringify(data));
-      });
   }, [todoTasks])
 
   return (
