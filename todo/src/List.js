@@ -22,7 +22,7 @@ const List = ({todoTasks, setTodoTasks}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        todoTasks.push({"name": Name, "description": Description, "isCompleted": false, "id": todoTasks.length});
+        setTodoTasks([...todoTasks, {"name": Name, "description": Description, "isCompleted": false, "id": todoTasks.length}])
         setName("")
         setDescription("")
         console.log(todoTasks)

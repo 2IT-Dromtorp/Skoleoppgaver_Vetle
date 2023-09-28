@@ -1,11 +1,12 @@
 const express = require('express')
 const fs = require('fs')
-
 const app = express()
+
+app.use(express.json())
 
 const PORT = 8080
 
-app.listen(PORT, () => console.log("Server started"));
+app.listen(PORT, () => console.log("Server started on port", PORT));
 
 app.use(express.static("build"))
 
@@ -16,13 +17,17 @@ app.get("/api/todo", (req, res) => {
 })
 
 
-app.post("/api/todo", (req, res) => {
-    let raw = req.body;
-    //let todoTasks = JSON.parse(raw);
-    console.log(raw)
+app.post("/api/todo", function(req, res) {
+    const rawData = req.body;
+    console.log(rawData)
 
-    fs.writeFile('./todo.json', '[{"name":"Oppgave1","description":"Første oppgave","isCompleted":false,"id":1}]', function (err) {
-        if (err) throw err
-        console.log("saved")
+fs.writeFile('./todo.json', JSON.stringify(rawData), function (err) {
+        if (err) {
+            console.error(err)
+            res.status(500).send("Internal Server Error")
+        } else {
+            console.log("Data saved")
+            res.status(200).send("Data saved successfully")
+        }
     })
 })
