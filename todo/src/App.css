@@ -34,7 +34,7 @@ label {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #0E131F;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -64,8 +64,18 @@ label {
 
 .listElement p {
   flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-.listElement input~input {
+
+form > input {
+  flex-grow: 1;
+}
+
+form {
+  display: flex;
+  justify-content: space-evenly;
   flex-grow: 1;
 }
 
@@ -81,6 +91,48 @@ label {
 .listElement button:hover {
   background-color: #8B939C;
   color: black;
+}
+.listElement h2 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.todolist {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 90vh;
+  width: 75vw;
+  gap: 2.5vh;
+}
+.theRealTodoList {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+  background-color: #38405F;
+  padding: 2vw 2vh;
+  border: outset #FF0035 6px;
+  border-radius: 12px;
+  align-items: center;
+}
+
+::-webkit-scrollbar{
+  width: 15px;
+  padding: 2px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 1000px;
+}
+::-webkit-scrollbar-thumb {
+  background: #282c34; 
+  border-radius: 1000px;
+  border: outset #0E131F 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  border: outset #FF0035 2px; 
 }
 
 @keyframes App-logo-spin {

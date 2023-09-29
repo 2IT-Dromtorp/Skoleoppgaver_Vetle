@@ -30,15 +30,17 @@ const List = ({todoTasks, setTodoTasks}) => {
 
     return(
         <div className="todolist">
-            {todoItems}
+            <div className="theRealTodoList">
+                {todoItems}
+            </div>
             <div className="maketask">
                 <form onSubmit={handleSubmit}>
                     <input type="text" placeholder="Navn" value={Name} onChange={e => setName(e.target.value)} />
                     <input type="text" placeholder="Beskrivelse" value={Description} onChange={e => setDescription(e.target.value)} />
                     <input type="submit" />
                 </form>
+                <label>Vis ferdige oppgaver<input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} /></label>
             </div>
-            <label>Vis ferdige oppgaver<input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} /></label>
         </div>
     )
 }

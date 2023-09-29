@@ -12,6 +12,14 @@ const ListElement = ({index, todoTasks, setTodoTasks}) => {
         setTodoTasks(todoTasksCopy)
     }
 
+    function EditTask() {
+        let todoTasksCopy = [...todoTasks];
+        todoTasksCopy[index].name = name
+        todoTasksCopy[index].description = description
+        setTodoTasks(todoTasksCopy)
+        setIsInEditMode(false)
+    }
+
     function DeleteTask() {
         setTodoTasks((todoTasksCopy) => todoTasksCopy = todoTasks.filter((item) => item.id !== todoTasks[index].id))
     }      
@@ -21,15 +29,15 @@ const ListElement = ({index, todoTasks, setTodoTasks}) => {
         return(
             <div className="listElement">
                 <input type='checkbox' defaultChecked={todoTasks[index].isCompleted} onChange={e => UpdateCompleted(e.target.checked)} />
-                <input type="text" value={name} onChange={e => setName(e.target.value)} />
-                <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
-                <button onClick={() => setIsInEditMode(false)}>Save</button>
+                <form onSubmit={EditTask}>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} />
+                    <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
+                    <button type="submit">Save</button>
+                </form>
                 <button>Delete</button>
             </div>
         )
     } else {
-        todoTasks[index].name = name
-        todoTasks[index].description = description
         return(
             <div className="listElement">
                 <input type='checkbox' defaultChecked={todoTasks[index].isCompleted} onChange={e => UpdateCompleted(e.target.checked)} />

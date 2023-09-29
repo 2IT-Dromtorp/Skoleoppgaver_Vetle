@@ -18,10 +18,9 @@ app.get("/api/todo", (req, res) => {
 
 
 app.post("/api/todo", function(req, res) {
-    const rawData = req.body;
-    console.log(rawData)
+    console.log(req.body)
 
-fs.writeFile('./todo.json', JSON.stringify(rawData), function (err) {
+    fs.writeFile('./todo.json', JSON.stringify(req.body), function (err) {
         if (err) {
             console.error(err)
             res.status(500).send("Internal Server Error")
