@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import List from './List';
 
-function App() {
+function TodoList() {
 
   const [todoTasks, setTodoTasks] = useState([])
   const [hasDoneInitalRender, setHasDoneInitialRender] = useState(false)
@@ -41,4 +41,4 @@ function App() {
   );
 }
 
-export default App;
+export default TodoList;

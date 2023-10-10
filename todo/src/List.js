@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import ListElement from "./ListElement";
 
-let Tasks = [];
-
 const List = ({todoTasks, setTodoTasks}) => {
     const [Name, setName] = useState("");
     const [Description, setDescription] = useState("");

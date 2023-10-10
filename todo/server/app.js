@@ -17,7 +17,7 @@ app.get("/api/todo", (req, res) => {
     res.send(todoTasks);
 })
 
-app.post("/api/todo", function(req, res) {
+app.post("/api/todo", (req, res) => {
     console.log(req.body)
 
     fs.writeFile("./todo.json", JSON.stringify(req.body), function(err) {
@@ -31,18 +31,10 @@ app.post("/api/todo", function(req, res) {
     })
 })
 
-app.get("/api/users", function(req, res) {
-    let raw = fs.readFileSync("./credentials.json")
-    res.send(JSON.parse(raw))
-})
-
-app.post("/api/users", async function(req, res) {
+app.post("/register", async (req, res) => {
     const userCopy = req.body
 
-    let hashedPassword = await bcrypt.hash(req.body.password, 10)
-    console.log(hashedPassword)
-
-    userCopy.password = hashedPassword
+    userCopy.password = await bcrypt.hash(req.body.password, 10)
 
     const raw = fs.readFileSync("./credentials.json")
     const credentials = JSON.parse(raw)
@@ -58,4 +50,24 @@ app.post("/api/users", async function(req, res) {
             res.status(200).send("User addeds")
         }
     })
+})
+
+app.post("/login", (req, res) => {
+    const raw = fs.readFileSync("./credentials.json")
+    const credentials = JSON.parse(raw)
+
+    let mailIndex;
+
+    for (let i in credentials){
+        if (credentials[i].mail.toLowerCase() == req.body.mail){
+            mailIndex = i;
+        }
+    }
+
+    if(mailIndex != undefined){
+        bcrypt.compare(req.body.password, credentials[mailIndex].password, (err, result) => {
+            res.send(result)
+            console.log(result)
+        })
+    }
 })
