@@ -16,9 +16,13 @@ const Login = () => {
             body: JSON.stringify({"mail": mail, "password": password})
             })
             .then((res) => {
-              if (!res.ok){
-                throw new Error(`Request failed with status ${res.status}`)
-              }
+                if (!res.ok){
+                    throw new Error(`Request failed with status ${res.status}`)
+                }
+                return res.json()
+            })
+            .then((data) => {
+                console.log(data.result)
             })
             .catch((error) => console.error("Error sending data:", error))
     }

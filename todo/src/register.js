@@ -10,12 +10,16 @@ const Register = () => {
         fetch("/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"mail": mail, "password": password, "username": username})
+            body: JSON.stringify({"username": username, "mail": mail, "password": password})
             })
             .then((res) => {
-              if (!res.ok){
-                throw new Error(`Request failed with status ${res.status}`)
-              }
+                res.json()
+                if (!res.ok){
+                    throw new Error(`Request failed with status ${res.status}`)
+                }
+            })
+            .then((data) => {
+                console.log(data)
             })
             .catch((error) => console.error("Error sending data:", error))
     }
