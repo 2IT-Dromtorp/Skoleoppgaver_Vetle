@@ -66,8 +66,13 @@ app.post("/login", (req, res) => {
 
     if(mailIndex != undefined){
         bcrypt.compare(req.body.password, credentials[mailIndex].password, (err, result) => {
-            res.send(result)
-            console.log(result)
+            if (result){
+                res.json({"result": result})
+            } else if (!result) {
+                res.json({"result": result, "error": "Wrong password or mail"})
+            }
         })
+    } else {
+        res.send("Mail not found")
     }
 })
