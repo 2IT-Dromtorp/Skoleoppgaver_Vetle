@@ -17,12 +17,13 @@ const Login = () => {
             })
             .then((res) => {
                 if (!res.ok){
-                    throw new Error(`Request failed with status ${res.status}`)
+                    throw new Error(`${res.status}`)
                 }
                 return res.json()
             })
             .then((data) => {
-                console.log(data.result)
+                console.log(data.result, data.error)
+                navigate(`/profiles/${data.username}`)
             })
             .catch((error) => console.error("Error sending data:", error))
     }

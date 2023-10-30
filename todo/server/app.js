@@ -67,12 +67,12 @@ app.post("/login", (req, res) => {
     if(mailIndex != undefined){
         bcrypt.compare(req.body.password, credentials[mailIndex].password, (err, result) => {
             if (result){
-                res.json({"result": result})
+                res.status(200).json({"result": result, "error": "Login successful", "username": credentials[mailIndex].username})
             } else if (!result) {
-                res.json({"result": result, "error": "Wrong password or mail"})
+                res.status(401).json({"result": result, "error": "Wrong password or mail"})
             }
         })
     } else {
-        res.send("Mail not found")
+        res.status(400).json({"result": "Mail not found", "error": "Incorrect mail"})
     }
 })
