@@ -11,14 +11,17 @@ app.listen(PORT, () => console.log("Server started on port", PORT));
 
 app.use(express.static("build"))
 
-app.get("/api/todo", (req, res) => {
-    let raw = fs.readFileSync("./todo.json");
-    let todoTasks = JSON.parse(raw);
-    res.send(todoTasks);
+app.post("/api/todo/get", (req, res) => {
+    let todoTasks = fs.readFileSync("./todo.json");
+    console.log(req.body);
+    res.send(todoTasks[req.body].tasks);
 })
 
-app.post("/api/todo", (req, res) => {
+app.post("/api/todo/post", (req, res) => {
     console.log(req.body)
+
+    let file = JSON.parse(fs.readFileSync("./todo.json"));
+    file[req.body.listToEdit].tasks = req.body.tasks
 
     fs.writeFile("./todo.json", JSON.stringify(req.body), function(err) {
         if (err) {

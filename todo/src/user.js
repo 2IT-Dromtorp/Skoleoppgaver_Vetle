@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
 
 const User = () => {
-    let { username } = useParams();
+    const params = useParams();
 
     return(
         <>
-            <h1>{username}</h1>
+            <h1>{params.user}</h1>
             
         </>
     )
