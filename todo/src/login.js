@@ -23,7 +23,7 @@ const Login = () => {
             })
             .then((data) => {
                 console.log(data.result, data.error)
-                navigate(`/profiles/${data.username}`)
+                navigate(`/${data.username}`)
             })
             .catch((error) => console.error("Error sending data:", error))
     }
@@ -34,9 +34,8 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
                 <label>Mail: <input type="text" value={mail} onChange={e => setmail(e.target.value)}/></label>
                 <label>Password: <input type="password" value={password} onChange={e => setpassword(e.target.value)}/></label>
-                <input type="submit"></input>
+                <input type="submit" className="submit" />
             </form>
-            <button onClick={() => navigate('/register')}>Register</button>
         </>
     )
 }

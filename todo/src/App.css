@@ -79,6 +79,10 @@ form {
   flex-grow: 1;
 }
 
+.submit {
+  cursor: pointer;
+}
+
 .listElement button {
   background-color: #38405F;
   color: white;

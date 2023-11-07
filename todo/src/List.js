@@ -9,11 +9,11 @@ const List = ({todoTasks, setTodoTasks}) => {
     let todoItems = todoTasks.map((todo, index) => {
         if (!todo.isCompleted && !includeCompleted){
             return(
-                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={todo.id} />
+                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={index} />
             )
         } else if (includeCompleted) {
             return(
-                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={todo.id} />
+                <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={index} />
             )
         }
     })

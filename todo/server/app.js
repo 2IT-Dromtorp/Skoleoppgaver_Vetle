@@ -12,18 +12,16 @@ app.listen(PORT, () => console.log("Server started on port", PORT));
 app.use(express.static("build"))
 
 app.post("/api/todo/get", (req, res) => {
-    let todoTasks = fs.readFileSync("./todo.json");
-    console.log(req.body);
-    res.send(todoTasks[req.body].tasks);
+    let todoTasks = JSON.parse(fs.readFileSync("./todo.json"));
+
+    res.send(todoTasks[JSON.parse(req.body.list)].tasks);
 })
 
 app.post("/api/todo/post", (req, res) => {
-    console.log(req.body)
-
     let file = JSON.parse(fs.readFileSync("./todo.json"));
-    file[req.body.listToEdit].tasks = req.body.tasks
+    file[req.body.listToEdit].tasks = JSON.parse(req.body.tasks)
 
-    fs.writeFile("./todo.json", JSON.stringify(req.body), function(err) {
+    fs.writeFile("./todo.json", JSON.stringify(file), function(err) {
         if (err) {
             console.error(err)
             res.status(500).send("Internal Server Error")
@@ -47,10 +45,10 @@ app.post("/register", async (req, res) => {
     fs.writeFile("./credentials.json", JSON.stringify(credentials), function(err) {
         if (err) {
             console.error(err)
-            res.status(500).send("Internal server error")
+            res.status(500).json({"status": "Internal server error"})
         } else {
             console.log("User added")
-            res.status(200).send("User addeds")
+            res.status(200).json({"status": "User added"})
         }
     })
 })

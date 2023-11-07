@@ -6,15 +6,15 @@ import TodoList from './TodoList';
 import Login from './Login';
 import Register from './Register';
 import User from './User';
+import HomePage from './HomePage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/users/:user" element={<User />} />
-      <Route path="/users/:user/:list" element={<TodoList />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/:user" element={<User />} />
+      <Route path="/:user/:list" element={<TodoList />} />
     </Routes>
   </BrowserRouter>
 );
