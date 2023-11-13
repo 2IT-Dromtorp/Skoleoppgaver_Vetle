@@ -11,10 +11,8 @@ function TodoList() {
   const params = useParams()
 
   useEffect(() => {
-    fetch("/api/todo/get", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(params)
+    fetch(encodeURI(`/api/todo?id=${params.id}`), {
+      method: "get",
       })
       .then((res) => res.json())
       .then((data) => {setTodoTasks(data);setHasDoneInitialRender(true)})
@@ -24,7 +22,7 @@ function TodoList() {
   useEffect(() => {
     if (hasDoneInitalRender) {
       console.log("Continuing to fetch data")
-      fetch("/api/todo/post", {
+      fetch("/api/todo", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({"tasks": JSON.stringify(todoTasks), "listToEdit": params.list})
