@@ -1,17 +1,16 @@
 import { useState } from "react"
 
 const Register = () => {
-    const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const [username, setUsername] = useState("")
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (mail == "" || username == "") return
+        if (username === "") return
         fetch("/register", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"username": username, "mail": mail, "password": password})
+            body: JSON.stringify({"username": username, "password": password})
             })
             .then((res) => {
                 if (!res.ok){
@@ -21,7 +20,6 @@ const Register = () => {
             })
             .then((data) => {
                 console.log(data.status)
-                setMail("")
                 setUsername("")
                 setPassword("")
             })
@@ -32,9 +30,8 @@ const Register = () => {
         <>
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
-                <label>Mail: <input type="mail" value={mail} onChange={e => setMail(e.target.value)}/></label>
-                <label>Password: <input type="password" value={password} onChange={e => setPassword(e.target.value)}/></label>
                 <label>Username: <input type="text" value={username} onChange={e => setUsername(e.target.value)}/></label>
+                <label>Password: <input type="password" value={password} onChange={e => setPassword(e.target.value)}/></label>
                 <input type="submit" className="submit" />
             </form>
         </>

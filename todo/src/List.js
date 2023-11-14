@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ListElement from "./ListElement";
 
 const List = ({todoTasks, setTodoTasks}) => {
@@ -16,6 +16,7 @@ const List = ({todoTasks, setTodoTasks}) => {
                 <ListElement index={index} todoTasks={todoTasks} setTodoTasks={setTodoTasks} key={index} />
             )
         }
+        return <p>Kunne ikke finne liste</p>
     })
 
     const handleSubmit = (event) => {
@@ -27,8 +28,8 @@ const List = ({todoTasks, setTodoTasks}) => {
     }
 
     return(
-        <div className="todolist">
-            <div className="theRealTodoList">
+        <>
+            <div className="todolist">
                 {todoItems}
             </div>
             <div className="maketask">
@@ -39,7 +40,7 @@ const List = ({todoTasks, setTodoTasks}) => {
                 </form>
                 <label>Vis ferdige oppgaver<input type="checkbox" onClick={e => setIncludeCompleted(e.target.checked)} /></label>
             </div>
-        </div>
+        </>
     )
 }
 export default List;

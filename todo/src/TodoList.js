@@ -17,15 +17,14 @@ function TodoList() {
       .then((res) => res.json())
       .then((data) => {setTodoTasks(data);setHasDoneInitialRender(true)})
       .catch((error) => console.error("Error fetching data:", error))
-  }, []);
+  }, [params]);
 
   useEffect(() => {
     if (hasDoneInitalRender) {
-      console.log("Continuing to fetch data")
-      fetch("/api/todo", {
-        method: "POST",
+      fetch(encodeURI(`/api/todo?id=${params.id}`), {
+        method: "post",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({"tasks": JSON.stringify(todoTasks), "listToEdit": params.list})
+        body: JSON.stringify({"tasks": JSON.stringify(todoTasks)})
         })
         .then((res) => {
           if (!res.ok){
@@ -34,7 +33,7 @@ function TodoList() {
         })
         .catch((error) => console.error("Error sending data:", error))
     }
-  }, [todoTasks])
+  }, [todoTasks, hasDoneInitalRender, params])
 
   return (
     <div className="App">

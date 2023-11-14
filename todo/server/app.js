@@ -12,14 +12,8 @@ app.listen(PORT, () => {
     console.log("Server started on port", PORT);
     
     app.use(express.static("build"))
-
-    app.get("/*", (req, res) => {
-        console.log("a")
-        res.sendFile(path.join(__dirname, "build", "index.html"));
-    })
     
     app.get("/api/todo", (req, res) => {
-        console.log(req.query.id)
         let todoTasks = JSON.parse(fs.readFileSync("./todo.json"));
         
         res.send(todoTasks[req.query.id].tasks);
@@ -27,7 +21,8 @@ app.listen(PORT, () => {
     
     app.post("/api/todo", (req, res) => {
         let file = JSON.parse(fs.readFileSync("./todo.json"));
-        file[req.body.listToEdit].tasks = JSON.parse(req.body.tasks)
+        console.log(req.query.id)
+        file[req.query.id].tasks = JSON.parse(req.body.tasks)
 
         fs.writeFile("./todo.json", JSON.stringify(file), function(err) {
             if (err) {
@@ -42,11 +37,15 @@ app.listen(PORT, () => {
     
     app.post("/register", async (req, res) => {
         const userCopy = req.body
+        const credentials = JSON.parse(fs.readFileSync("./credentials.json"))
+
+        for (let i in credentials){
+            if(!(userCopy.username === credentials[i].username)) continue
+            res.status(403).json({"status": "User already exists"})
+        }
     
         userCopy.password = await bcrypt.hash(req.body.password, 10)
     
-        const raw = fs.readFileSync("./credentials.json")
-        const credentials = JSON.parse(raw)
         
         credentials.push(userCopy)
         
@@ -62,27 +61,32 @@ app.listen(PORT, () => {
     })
     
     app.post("/login", (req, res) => {
-        const raw = fs.readFileSync("./credentials.json")
-        const credentials = JSON.parse(raw)
+        const credentials = JSON.parse(fs.readFileSync("./credentials.json"))
     
-        let mailIndex;
+        let userIndex;
+
+        req.body.username
         
         for (let i in credentials){
-            if (credentials[i].mail.toLowerCase() == req.body.mail){
-                mailIndex = i;
+            if (credentials[i].username.toLowerCase() == req.body.username.toLowerCase()){
+                userIndex = i;
             }
         }
     
-        if(mailIndex != undefined){
-            bcrypt.compare(req.body.password, credentials[mailIndex].password, (err, result) => {
+        if(userIndex != undefined){
+            bcrypt.compare(req.body.password, credentials[userIndex].password, (err, result) => {
                 if (result){
-                    res.status(200).json({"result": result, "error": "Login successful", "username": credentials[mailIndex].username})
+                    res.status(200).json({"result": result, "error": "Login successful", "username": credentials[userIndex].username})
                 } else if (!result) {
-                    res.status(401).json({"result": result, "error": "Wrong password or mail"})
+                    res.status(401).json({"result": result, "error": "Wrong password or username"})
                 }
             })
         } else {
-            res.status(400).json({"result": "Mail not found", "error": "Incorrect mail"})
+            res.status(400).json({"result": "Username not found", "error": "Username not found"})
         }
+    })
+    
+    app.get("/*", (req, res) => {
+        res.sendFile(path.join(__dirname, "build", "index.html"));
     })
 })

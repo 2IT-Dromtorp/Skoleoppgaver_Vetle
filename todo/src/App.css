@@ -105,14 +105,6 @@ form {
 .todolist {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  height: 90vh;
-  width: 75vw;
-  gap: 2.5vh;
-}
-.theRealTodoList {
-  display: flex;
-  flex-direction: column;
   flex-grow: 1;
   overflow: auto;
   background-color: #38405F;

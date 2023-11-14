@@ -2,18 +2,18 @@ import { useState } from "react"
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const [mail, setmail] = useState("")
+    const [username, setusername] = useState("")
     const [password, setpassword] = useState("")
 
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(mail, password)
+        console.log(username, password)
         fetch("/login", {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({"mail": mail, "password": password})
+            body: JSON.stringify({"username": username, "password": password})
             })
             .then((res) => {
                 if (!res.ok){
@@ -32,7 +32,7 @@ const Login = () => {
         <>
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                <label>Mail: <input type="text" value={mail} onChange={e => setmail(e.target.value)}/></label>
+                <label>Username: <input type="username" value={username} onChange={e => setusername(e.target.value)}/></label>
                 <label>Password: <input type="password" value={password} onChange={e => setpassword(e.target.value)}/></label>
                 <input type="submit" className="submit" />
             </form>
