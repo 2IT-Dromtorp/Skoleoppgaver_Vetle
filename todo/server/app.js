@@ -14,9 +14,15 @@ app.listen(PORT, () => {
     app.use(express.static("build"))
     
     app.get("/api/todo", (req, res) => {
-        let todoTasks = JSON.parse(fs.readFileSync("./todo.json"));
+        const todoTasks = JSON.parse(fs.readFileSync("./todo.json"));
         
         res.send(todoTasks[req.query.id].tasks);
+    })
+
+    app.get("/api/todo/name", (req, res) => {
+        const todoTasks = JSON.parse(fs.readFileSync("./todo.json"));
+
+        res.status(200).json({"name": todoTasks[req.query.id].name, "id": req.query.id})
     })
     
     app.post("/api/todo", (req, res) => {
@@ -45,6 +51,8 @@ app.listen(PORT, () => {
         }
     
         userCopy.password = await bcrypt.hash(req.body.password, 10)
+
+        userCopy.availableLists = [];
     
         
         credentials.push(userCopy)
@@ -86,6 +94,18 @@ app.listen(PORT, () => {
         }
     })
     
+    app.get("/availablelists", (req, res) => {
+        const credentials = JSON.parse(fs.readFileSync("./credentials.json"))
+
+        let userId = undefined;
+
+        for(let i in credentials){if (credentials[i].username.toLowerCase() == req.query.user.toLowerCase()){userId = i}}
+
+        if(userId == undefined) res.status(404).send("User not found")
+        
+        res.status(200).send(credentials[userId].availableLists)
+    })
+
     app.get("/*", (req, res) => {
         res.sendFile(path.join(__dirname, "build", "index.html"));
     })
