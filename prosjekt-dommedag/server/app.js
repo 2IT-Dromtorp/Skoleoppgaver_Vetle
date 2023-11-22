@@ -11,5 +11,17 @@ const PORT = 8080
 app.listen(PORT, () => {
     console.log("Server started on port", PORT);
     
-    app.use(express.static("build"))
+    app.use(express.static("dist"))
+
+    const courses = [
+        {"name": "Grunnleggende datakunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem"},
+        {"name": "Norsk", "date": "12.12.2023", "time": "13:00", "description": "lorem"},
+        {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem"},
+        {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem"},
+    ]
+
+    app.get("/api/courses", (req, res) => {
+        console.log(courses)
+        res.status(200).json(courses)
+    })
 })

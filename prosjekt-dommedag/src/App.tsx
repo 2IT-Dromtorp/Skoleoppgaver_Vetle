@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Popup from './Popup';
 import './index.css'
+import { FetchCourses } from './Fetch';
 
 function App() {
   const [popupActive, setPopupActive] = useState(false);
+  const [courses, setCourses] = useState([])
+
+  useEffect(() => {
+    async function SetCourses(){
+      setCourses(await FetchCourses())
+      console.log(courses)
+    }
+    SetCourses()
+  }, [])
 
   return (
     <>
       {popupActive ? <Popup setPopupActive={setPopupActive} /> : <></>}
+      <button onClick={() => console.log(courses)} className="w-1/2 h-64 bg-slate-500" />
       <img src="../dromtorp-videregaende-skole.svg" className="absolute left-5 top-5 w-64"></img>
       <input
       type="checkbox"

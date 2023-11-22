@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
 function GetPopup(): JSX.Element {
-    const [currentPopup, setCurrentPopup] = useState("");
+    const [currentPopup] = useState("");
 
     switch (currentPopup){
         case "login":
