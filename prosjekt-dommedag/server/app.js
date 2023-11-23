@@ -18,6 +18,14 @@ app.listen(PORT, () => {
         {"name": "Norsk", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": true},
         {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
         {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Heimkunnskap", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
+        {"name": "Kroppsøving", "date": "12.12.2023", "time": "13:00", "description": "lorem", "joined": false},
     ]
 
     app.get("/api/courses", (req, res) => {
