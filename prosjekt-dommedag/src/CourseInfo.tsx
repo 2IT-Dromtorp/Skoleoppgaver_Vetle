@@ -2,7 +2,7 @@ import { useState } from "react"
 import { courseData } from "./Fetch"
 
 function CourseInfo({course}: {course? : courseData[0]}): JSX.Element {
-    const [tmpbool, settmpbool] = useState(false)
+    const [tmpbool, settmpbool] = useState(true)
 
     return(
         <div className="flex flex-col items-center w-full">

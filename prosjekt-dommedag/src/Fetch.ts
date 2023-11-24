@@ -17,3 +17,18 @@ export async function FetchCourses(): Promise<courseData>{
         return [];
     }
 }
+
+export async function FetchRegister(name: string, mail: string, password: string): Promise<Response>{
+    try {
+        return fetch("/api/register",
+        {
+            method: "post",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name: name, mail: mail, password: password})
+        });
+    }
+    catch (error) {
+        console.error("Error fetching login:", error);
+        return new Response;
+    }
+}

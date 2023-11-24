@@ -18,6 +18,8 @@ function App() {
     SetCourses()
   }, [])
 
+  
+
   return (
     <>
       {popupActive ? <Popup course={activeCourse !== undefined ? activeCourse : undefined} setPopupActive={setPopupActive} currentPopup={currentPopup} /> : <></>}

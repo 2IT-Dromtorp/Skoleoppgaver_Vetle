@@ -38,7 +38,7 @@ app.listen(PORT, () => {
         res.status(200).json({"message": "user added"})
     })
     
-    app.post("/login", (req, res) => {
+    app.post("/api/login", (req, res) => {
         const credentials = JSON.parse(fs.readFileSync("./credentials.json"))
     
         let userIndex;
@@ -62,5 +62,9 @@ app.listen(PORT, () => {
         } else {
             res.status(400).json({"result": "Username not found", "error": "Username not found"})
         }
+    })
+
+    app.get("/api/coffepot", (req, res) => {
+        res.status(418)
     })
 })
