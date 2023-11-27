@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FetchLogin } from "./Fetch";
 
 function Login(): JSX.Element {
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
+    const [response, setResponse] = useState<{result: Boolean, message: string, name: string}>();
+
+    useEffect(() => {
+        if (response === undefined || !response.result) return
+        console.log(response)
+        document.cookie = "user=" + response.name
+    }, [response])
+
+    async function HandleSubmit(): Promise<void> {
+        const rawResponse = await FetchLogin(mail, password)
+        setResponse(await rawResponse.json())
+    }
 
     return(
         <div className="h-10/12 w-5/12 flex flex-col">
             <h2 className="text-2xl font-bold mb-4">Logg inn med bruker</h2>
-            <form onSubmit={e => {e.preventDefault();console.log("a")}}>
+            <form onSubmit={e => {e.preventDefault();HandleSubmit()}}>
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                     E-post
                     <input type="email" value={mail} onChange={e => setMail(e.target.value)} required={true} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />

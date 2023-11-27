@@ -14,7 +14,7 @@ export async function FetchCourses(): Promise<courseData>{
         return data;
     } catch (error) {
         console.error("Error fetching courses:", error);
-        return [];
+        throw new Error;
     }
 }
 
@@ -29,6 +29,20 @@ export async function FetchRegister(name: string, mail: string, password: string
     }
     catch (error) {
         console.error("Error fetching login:", error);
-        return new Response;
+        throw new Error;
+    }
+}
+
+export async function FetchLogin(mail: string, password: string): Promise<Response>{
+    try {
+        return fetch("/api/login",{
+            method: "post",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({mail: mail, password: password}),
+        })
+    }
+    catch (error) {
+        console.error("Error fetching login:", error)
+        throw new Error;
     }
 }
