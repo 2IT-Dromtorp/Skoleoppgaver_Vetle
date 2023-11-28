@@ -10,7 +10,7 @@ app.use(express.json())
 
 const dbConnection = mysql.createConnection({
     user: "root",
-    password: "123",
+    password: "123qweasdzxc",
     port: 3306,
     database: "dommedag_db",
 });
@@ -44,9 +44,9 @@ app.listen(PORT, () => {
         console.log(userCopy)
 
         dbConnection.connect((err) => {
-            if (err) {console.error(err);res.status(500).json(err)}
+            if (err) {console.error("error", err);res.status(500).json(err)}
             dbConnection.query("INSERT INTO users (name, mail, password) VALUES (?, ?, ?)", [userCopy.name, userCopy.mail, userCopy.password],(err, result) => {
-                if (err) {console.error(err);res.status(409).json(err)}
+                if (err) {console.error("error", err);res.status(409).json(err)}
                 console.log("User added", userCopy)
                 res.status(200).json(result)
             })
@@ -55,16 +55,16 @@ app.listen(PORT, () => {
     
     app.post("/api/login", (req, res) => {
         dbConnection.connect((err) => {
-            if (err) {console.error(err);res.status(500).json(err)}
+            if (err) {console.error("error", err);res.status(500).json(err)}
             dbConnection.query("SELECT * FROM users WHERE mail = ?", [req.body.mail], (err, sql) => {
-                if (err || sql[0] === undefined) {console.error(err);res.status(400).json(err);return}
+                if (err || sql[0] === undefined) {console.error("error", err);res.status(400).json(err);return}
                 bcrypt.compare(req.body.password, sql[0].password, (err, result) => {
-                    if (err) {console.log(err);res.status(500).json(err)}
+                    if (err) {console.log("error", err);res.status(500).json(err)}
                     if (result){
                         const token = Encrypt(sql[0].mail)
                         res.cookie("token", token);
                         dbConnection.query("UPDATE users SET token = ? WHERE mail = ?", [token, sql[0].mail], (err) => {
-                            if (err) {console.log(err);res.status(500).json(err)}
+                            if (err) {console.log("error", err);res.status(500).json(err)}
                             res.status(200).json({"message": "Login successful"})
                         })
                     } else if (!result) {
@@ -80,9 +80,9 @@ app.listen(PORT, () => {
 
         const cookieValue = req.headers.cookie.split("=")[1]
         dbConnection.connect((err) => {
-            if (err) {console.log(err);res.status(500).json(err)}
+            if (err) {console.log("error", err);res.status(500).json(err)}
             dbConnection.query("SELECT token FROM users WHERE token = ?", [cookieValue], (err, sql) => {
-                if (err || sql[0] === undefined) {console.log(err);res.status(418).json(err);return}
+                if (err || sql[0] === undefined) {console.log("error", err);res.status(418).json(err);return}
                 res.status(200).json(true)
             })
         })
@@ -93,17 +93,16 @@ app.listen(PORT, () => {
 
         const cookieValue = req.headers.cookie.split("=")[1]
         dbConnection.connect((err) => {
-            if (err) {console.log(err);res.status(500).json(err)}
+            if (err) {console.log("error", err);res.status(500).json(err)}
             dbConnection.query("SELECT token, mail FROM users WHERE token = ?", [cookieValue], (err, userSql) => {
-                if (err || userSql[0].token === undefined) {console.log(err);res.status(418).json(err);return}
-                dbConnection.query("SELECT joined, name FROM courses WHERE ('name' = ?)", [req.query.course], (err, courseSql) => {
-                    if (err) {console.log(err);res.status(418).json(err);return}
-                    const joined = JSON.parse(sql[0].joined)
+                if (err || userSql[0].token === undefined) {console.log("error", err);res.status(418).json(err);return}
+                dbConnection.query("SELECT name, mail FROM joined WHERE (name = ?) AND (mail = ?)", [req.query.course, userSql[0].mail], (err, joined) => {
+                    if (err || joined.length !== 0) {console.log("error", err);res.status(409).json(err);return}
                     console.log(joined)
-                    joined.push(userSql[0].mail)
-                    dbConnection.query("UPDATE courses SET joined = ? WHERE (name = ?)", [joined, courseSql[0].name], (err, sql) => {
-                        if (err) {console.log(err);res.status(500).json(err)}
-                        res.status(200).json(sql)
+                    dbConnection.query("INSERT INTO joined (name, mail) VALUES (?, ?)", [req.query.course, userSql[0].mail], (err, courseSql) => {
+                        if (err) {console.log("error", err);res.status(418).json(err);return}
+                        console.log(courseSql)
+                        res.status(200).json(courseSql)
                     })
                 })
             })
@@ -115,9 +114,9 @@ app.listen(PORT, () => {
 
         const cookieValue = req.headers.cookie.split("=")[1]
         dbConnection.connect((err) => {
-            if (err) {console.log(err);res.status(500).json(err)}
+            if (err) {console.log("error", err);res.status(500).json(err)}
             dbConnection.query("SELECT name, mail FROM users WHERE token = ?", [cookieValue], (err, userSql) => {
-                if (err || userSql[0].token === undefined) {console.log(err);res.status(418).json(err);return}
+                if (err || userSql[0].token === undefined) {console.log("error", err);res.status(418).json(err);return}
                 res.status(200).json(userSql[0])
             })
         })
