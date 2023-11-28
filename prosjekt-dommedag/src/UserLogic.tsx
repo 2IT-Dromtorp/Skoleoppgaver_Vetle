@@ -1,11 +1,12 @@
+import { Dispatch, SetStateAction } from "react";
 import Login from "./Login";
 import Register from "./Register";
 
-function UserLogic(): JSX.Element {
+function UserLogic({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
     return(
         <div className="h-full w-full flex flex-row justify-evenly">
-            <Register />
-            <Login />
+            <Register setPopupActive={setPopupActive}/>
+            <Login setPopupActive={setPopupActive}/>
         </div>
     )
 }

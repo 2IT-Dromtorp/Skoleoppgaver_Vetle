@@ -1,20 +1,14 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FetchLogin } from "./Fetch";
 
-function Login(): JSX.Element {
+function Login({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
-    const [response, setResponse] = useState<{result: Boolean, message: string, name: string}>();
-
-    useEffect(() => {
-        if (response === undefined || !response.result) return
-        console.log(response)
-        document.cookie = "user=" + response.name
-    }, [response])
 
     async function HandleSubmit(): Promise<void> {
-        const rawResponse = await FetchLogin(mail, password)
-        setResponse(await rawResponse.json())
+        await FetchLogin(mail, password)
+        if (document.cookie === "")return
+        setPopupActive(false)
     }
 
     return(

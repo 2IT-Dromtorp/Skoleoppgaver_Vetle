@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { FetchRegister } from "./Fetch";
+import { Dispatch, SetStateAction, useState } from "react";
+import { FetchLogin, FetchRegister } from "./Fetch";
 
-function Register(): JSX.Element {
+function Register({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
     const [name, setName] = useState("")
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
@@ -10,6 +10,10 @@ function Register(): JSX.Element {
         const rawResponse = await FetchRegister(name, mail, password)
         const response: {message: string, error?: Error} = await rawResponse.json()
         console.log(response.message)
+        if (response.error === undefined)return
+        await FetchLogin(mail, password)
+        if (document.cookie === "")return
+        setPopupActive(false)
     }
 
     return(
