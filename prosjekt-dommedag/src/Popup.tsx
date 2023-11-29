@@ -9,13 +9,10 @@ function GetPopup({course, currentPopup, setPopupActive}: {course : courseData[0
 
     switch (currentPopup){
         case "login":
-            console.log("went to login")
             return <UserLogic setPopupActive={setPopupActive} />
         case "course":
-            console.log("went to course")
             return <CourseInfo course={course} setPopupActive={setPopupActive}/>
         default:
-            console.log("went to default")
             return <p>default</p>
     }
 }

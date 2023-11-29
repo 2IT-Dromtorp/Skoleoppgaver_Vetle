@@ -5,15 +5,11 @@ function Register({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<bo
     const [name, setName] = useState("")
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
+    const [message, setmessage] = useState("")
 
     async function HandleSubmit(): Promise<void> {
-        const rawResponse = await FetchRegister(name, mail, password)
-        const response: {message: string, error?: Error} = await rawResponse.json()
-        console.log(response.message)
-        if (response.error === undefined)return
-        await FetchLogin(mail, password)
-        if (document.cookie === "")return
-        setPopupActive(false)
+        const res = await FetchRegister(name, mail, password)
+        setmessage(res.message)
     }
 
     return(
@@ -32,6 +28,7 @@ function Register({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<bo
                     Passord
                     <input type="password" value={password} onChange={e => setPassword(e.target.value)} required={true} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </label>
+                <p>{message}</p>
                 <input type="submit" className="px-4 py-3 rounded-md bg-green-500 cursor-pointer duration-200 hover:bg-green-600 shadow" />
             </form>
         </div>
