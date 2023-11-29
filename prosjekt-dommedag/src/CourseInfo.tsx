@@ -1,10 +1,12 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import { FetchJoin, FetchJoinedCourses, FetchToken, courseData } from "./Fetch"
+import { FetchJoin, FetchJoinedCourses, FetchToken, FetchUser, courseData } from "./Fetch"
 
 function CourseInfo({course, setPopupActive}: {course? : courseData[0], setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [joinedCourses, setJoinedCourses] = useState<courseData>([]);
     const [joined, setJoined] = useState(Boolean)
+    const [userInfo, setUserInfo] = useState<{name: string, mail: string, permissions: number}>({name: "", mail: "", permissions: 0})
+    const [joinedUsers, setJoinedUsers] = useState<[]>([])
     
     useEffect(() => {
         if(!isLoggedIn)return
@@ -18,6 +20,7 @@ function CourseInfo({course, setPopupActive}: {course? : courseData[0], setPopup
         async function GetLoggedIn(){
           const res = await FetchToken()
           setIsLoggedIn(res)
+          setUserInfo(await FetchUser())
         }
         GetLoggedIn()
         for (let i in joinedCourses) {
@@ -39,7 +42,10 @@ function CourseInfo({course, setPopupActive}: {course? : courseData[0], setPopup
             <p className="font-bold">Dag: {course?.day}</p>
             <p className="font-bold">Tid: {course?.time}</p>
             <p>{course?.description}</p>
-            {!joined && <p className="absolute bottom-4 text-red-600 font-bold">Dette er en bindende avtale, det er ikke mulig å melde seg av</p>}
+            {joinedUsers.map((joinedUser, index) => {
+                return <p key={index}>{joinedUser}</p>
+            })}
+            {!joined  && <p className="absolute bottom-4 text-red-600 font-bold">Dette er en bindende avtale, det er ikke mulig å melde seg av</p>}
         </div>
     )
 }

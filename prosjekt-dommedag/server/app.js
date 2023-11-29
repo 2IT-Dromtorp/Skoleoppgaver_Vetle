@@ -112,7 +112,7 @@ app.listen(PORT, () => {
         const cookieValue = req.headers.cookie.split("=")[1]
         dbConnection.connect((err) => {
             if (err) {console.log("error", err);res.status(500).json(err);return}
-            dbConnection.query("SELECT name, mail FROM users WHERE token = ?", [cookieValue], (err, userSql) => {
+            dbConnection.query("SELECT name, mail, permissions FROM users WHERE token = ?", [cookieValue], (err, userSql) => {
                 if (err || userSql[0] === undefined) {console.log("error", err);res.status(418).json(err);return}
                 res.status(200).json(userSql[0])
             })
@@ -146,6 +146,24 @@ app.listen(PORT, () => {
                 dbConnection.query("SELECT * FROM courses WHERE name NOT IN (SELECT name FROM joined WHERE (mail = ?))", [userSql[0].mail], (err, availableCourse) => {
                     if (err) {console.log("error", err);res.status(418).json(err);return}
                     res.status(200).json(availableCourse);
+                })
+            })
+        })
+    })
+
+    app.get("/api/joinedusers", (req, res) => {
+        if (req.headers.cookie === undefined){res.status(200).json(false);return}
+
+        const cookieValue = req.headers.cookie.split("=")[1]
+        dbConnection.connect((err) => {
+            if (err) {console.log("error", err);res.status(500).json(err);return}
+            
+            dbConnection.query("SELECT permissions FROM users WHERE token = ?", [cookieValue], (err, userSql) => {
+                if (err || userSql[0] === undefined) {console.log("error", err);res.status(418).json(err);return}
+                if (!(userSql[0].permissions >= 1)){console.log("error");res.status(403).json({message: "Permissionlevel too low for this command"})}
+                dbConnection.query("SELECT mail FROM joined WHERE (name = ?)", [req.query.course], (err, users) => {
+                    if (err || users[0] === undefined) {console.log("error", err);res.status(418).json(err);return}
+                    res.status(200).json(users)
                 })
             })
         })

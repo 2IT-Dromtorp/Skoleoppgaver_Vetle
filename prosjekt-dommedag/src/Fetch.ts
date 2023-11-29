@@ -109,3 +109,16 @@ export async function FetchAvailableCourses(): Promise<any> {
         throw new Error("Error fetching available courses")
     }
 }
+
+export async function FetchJoinedUsers(course: string): Promise<any> {
+    try {
+        const res = await fetch(encodeURI(`/api/joinedusers?course=${course}`), {
+            method: "get",
+            headers: {"Content-Type": "application/json"},
+        })
+        return await res.json()
+    }
+    catch {
+        throw new Error("Error fetching joined users")
+    }
+}
