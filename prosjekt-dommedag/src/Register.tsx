@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { FetchLogin, FetchRegister } from "./Fetch";
+import { useState } from "react";
+import { FetchRegister } from "./Fetch";
 
-function Register({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
+function Register(): JSX.Element {
     const [name, setName] = useState("")
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")

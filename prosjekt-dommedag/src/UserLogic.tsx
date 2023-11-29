@@ -5,7 +5,7 @@ import Register from "./Register";
 function UserLogic({setPopupActive}: {setPopupActive : Dispatch<SetStateAction<boolean>>}): JSX.Element {
     return(
         <div className="h-full w-full flex flex-row justify-evenly">
-            <Register setPopupActive={setPopupActive}/>
+            <Register />
             <Login setPopupActive={setPopupActive}/>
         </div>
     )
