@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Test from './Test';
 import Layout from './Layout';
 import Create from './Create';
+import List from './List';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<></>} />
             <Route path="test" element={<Test />} />
+            <Route path="ticket" element={<List />} />
             <Route path="ticket/create" element={<Create />} />
           </Route>
         </Routes>
