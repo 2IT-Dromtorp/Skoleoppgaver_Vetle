@@ -1,13 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
-import ticketsImport from "./tickets.json";
-import { useState } from "react";
 
 function Layout(): JSX.Element {
-    const ticketsType = [{"short": String, "long": String, "name": String, "priority": Number}]
-
-    const [tickets, setTickets] = useState<typeof ticketsType>()
-    setTickets([...tickets, ticketsImport])
-    console.log(tickets);
     return(
         <>
             <nav className="flex flex-row justify-evenly bg-gray-700 h-16 shadow-lg mb-12 py-2">

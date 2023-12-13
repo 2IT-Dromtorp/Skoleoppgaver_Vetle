@@ -1,16 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TicketsContext } from "./App";
 
 function Create(): JSX.Element {
+    const { tickets, setTickets } = useContext(TicketsContext);
+
     const [short, setShort] = useState("");
     const [long, setLong] = useState("");
     const [name, setName] = useState("");
-    const [severity, setSeverity] = useState("");
+    const [priority, setPriority] = useState(0);
+    const [date, setDate] = useState(new Date())
 
     function HandleSubmit() {
         console.log(short);
         console.log(long);
         console.log(name);
-        console.log(severity);
+        console.log(priority);
+        setDate(new Date());
+        console.log(date);
+        setTickets([...tickets, {"short": short, "long": long, "name": name, "priority": priority, "date": `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`, "time": `${date.getHours()}:${date.getMinutes()}`, "done": false}]);
     }
 
     return(
@@ -30,7 +37,7 @@ function Create(): JSX.Element {
                 </label>
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                     Hvor viktig er problemet:
-                    <input onChange={e => setSeverity(e.target.value)} value={severity} type="text" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5" />
+                    <input onChange={e => setPriority(e.target.valueAsNumber)} value={priority} type="number" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5" />
                 </label>
                 <input type="submit" className="border bg-gray-300 text-sm font-medium text-gray-900 rounded-lg w-full p-2.5 duration-200 cursor-pointer hover:bg-gray-400" />
             </form>
