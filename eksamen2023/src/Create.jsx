@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { TicketsContext } from "./App";
 
-function Create(): JSX.Element {
+function Create() {
     const { tickets, setTickets } = useContext(TicketsContext);
 
     const [short, setShort] = useState("");

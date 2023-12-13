@@ -8,11 +8,9 @@ import Create from './Create';
 import List from './List';
 
 export const TicketsContext = createContext(null)
-export type ticketsType = Array<{"short": string, "long": string, "name": string, "priority": number, "date": string, "time": string, "done": boolean}>
-
 function App() {
 
-  const [tickets, setTickets] = useState<ticketsType>([{"short": "", "long": "", "name": "", "priority": 0, "date": "", "time": "22:00", "done": false}])
+  const [tickets, setTickets] = useState([{"short": "", "long": "", "name": "", "priority": 0, "date": "", "time": "22:00", "done": false}])
 
   useEffect(() => {
       setTickets(ticketsImport)

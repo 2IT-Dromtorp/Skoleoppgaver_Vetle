@@ -1,6 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 
-function Layout(): JSX.Element {
+function Layout() {
     return(
         <>
             <nav className="flex flex-row justify-evenly bg-gray-700 h-16 shadow-lg mb-12 py-2">

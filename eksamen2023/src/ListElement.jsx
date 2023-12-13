@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { TicketsContext, ticketsType } from "./App";
+import { TicketsContext } from "./App";
 import sidearrow from './arrowside.png'
 import downarrow from './arrowdown.png'
 
-function ListElement({ticket}: {"ticket" : ticketsType[0]}): JSX.Element {
+function ListElement({ticket}) {
     const [extended, setExtended] = useState(false);
 
     const { tickets, setTickets } = useContext(TicketsContext);

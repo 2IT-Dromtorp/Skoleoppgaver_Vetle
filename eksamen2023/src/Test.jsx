@@ -1,4 +1,4 @@
-function Test(): JSX.Element {
+function Test() {
     return(
         <>
             <p className="text-9xl">Test</p>
