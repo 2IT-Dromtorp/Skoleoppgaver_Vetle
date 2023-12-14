@@ -35,6 +35,7 @@ function ListElement({ticket}) {
                 <div className="rounded-md w-20 h-10 font-semibold bg-lime-500" />
                 }
                 {extended && <p className="break-words w-full">{ticket.long}</p>}
+                {extended && <p className="break-words w-full">Feilmelding opprettet av: {ticket.name}</p>}
             </div>
         </>
     )
