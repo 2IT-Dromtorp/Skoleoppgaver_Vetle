@@ -6,11 +6,12 @@ import Test from './Test';
 import Layout from './Layout';
 import Create from './Create';
 import List from './List';
+import FrontPage from './FrontPage';
 
-export const TicketsContext = createContext(null)
+export const TicketsContext = createContext([])
 function App() {
 
-  const [tickets, setTickets] = useState([{"short": "", "long": "", "name": "", "priority": 0, "date": "", "time": "22:00", "done": false}])
+  const [tickets, setTickets] = useState([])
 
   useEffect(() => {
       setTickets(ticketsImport)
@@ -22,7 +23,7 @@ function App() {
         <TicketsContext.Provider value={{tickets, setTickets}}>
           <Routes>
             <Route path="/" element={<Layout />}>
-              <Route index element={<></>} />
+              <Route index element={<FrontPage />} />
               <Route path="test" element={<Test />} />
               <Route path="ticket" element={<List />} />
               <Route path="ticket/create" element={<Create />} />
