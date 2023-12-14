@@ -10,7 +10,7 @@ function List() {
     console.log(tickets);
 
     return(
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 min-h-full">
             <h1 className="font-extrabold text-3xl text-gray-800">Opprettede feilmeldinger</h1>
             <label>
                 <input onChange={e => setIncludeCompleted(e.target.checked)} checked={includeCompleted} type="checkbox" />

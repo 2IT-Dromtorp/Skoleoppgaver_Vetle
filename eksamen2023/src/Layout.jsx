@@ -9,7 +9,9 @@ function Layout() {
                     <Link to="/ticket" className="flex bg-gray-300 items-center px-6 rounded-md duration-200 hover:bg-gray-400">Se gjennom feilmeldinger</Link>
                     <Link to="/ticket/create" className="flex bg-gray-300 items-center px-6 rounded-md duration-200 hover:bg-gray-400">Opprett en feilmelding</Link>
                 </nav>
-                <Outlet />
+                <div className="">
+                    <Outlet />
+                </div>
                 <footer className="bg-gray-700 shadow-lg py-2 absolute bottom-0 w-full p-4 text-gray-300 text-sm">
                     <h1 className="font-bold">Kontaktinformasjon</h1>
                     <p>Tlf: +47 941 65 546</p>

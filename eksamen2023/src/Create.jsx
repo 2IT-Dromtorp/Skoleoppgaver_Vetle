@@ -28,24 +28,24 @@ function Create() {
     }
 
     return(
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center min-h-screen">
             <h1 className="font-extrabold text-3xl text-gray-800 mb-4">Opprett en feilmelding</h1>
             <form onSubmit={e => {e.preventDefault();HandleSubmit()}} className="flex flex-col border-gray-700 border rounded-2xl p-4 w-2/5 shadow-2xl">
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                     Kort beskrivelse av problemet:
-                    <input onChange={e => setShort(e.target.value)} value={short} type="text" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5" />
+                    <input onChange={e => setShort(e.target.value)} value={short} type="text" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:outline-none" />
                 </label>
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                     Lenger beskrivelse av problemet:
-                    <textarea onChange={e => setLong(e.target.value)} value={long} required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 h-64" />
+                    <textarea onChange={e => setLong(e.target.value)} value={long} required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 h-64 focus:outline-none" />
                 </label>
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                     Ditt navn:
-                    <input onChange={e => setName(e.target.value)} value={name} type="text" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5" />
+                    <input onChange={e => setName(e.target.value)} value={name} type="text" required={true} className="border bg-gray-300 text-gray-900 text-sm rounded-lg w-full p-2.5 focus:outline-none" />
                 </label>
                 <label>
                     {message}
-                    <input type="submit" className="border bg-gray-300 text-sm font-medium text-gray-900 rounded-lg w-full p-2.5 duration-200 cursor-pointer hover:bg-gray-400" />
+                    <input type="submit" className="border bg-gray-300 text-sm font-medium text-gray-900 rounded-lg w-full p-2.5 duration-200 cursor-pointer hover:bg-gray-400 focus:outline-none" />
                 </label>
             </form>
         </div>
