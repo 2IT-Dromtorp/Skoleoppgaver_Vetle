@@ -7,19 +7,17 @@ const server = new Server({
 });
 
 server.on("connection", (client) => {
-    console.log("user connected")
-
     client.on("join room", (room) => {
         if (server.sockets.adapter.rooms.get(room) === undefined || server.sockets.adapter.rooms.get(room).size >= 2) return
+        client.rooms.forEach((room) => console.log(room))
         client.join(room)
-        console.log("client joined room: " + room)
         client.emit("join lobby")
     })
-
+    
     client.on("create room", (room) => {
         if (server.sockets.adapter.rooms.get(room) !== undefined) return
+        client.rooms.forEach((room) => console.log(room))
         client.join(room)
-        console.log("create room: " + room)
         client.emit("join lobby")
     })
 
@@ -32,16 +30,31 @@ server.on("connection", (client) => {
     })
     
     client.on("send to game", () => {
-        console.log("game started")
         server.to(Array.from(client.rooms)[1]).emit("send to game")
+    })
+
+    client.on("get roles", () => {
+        try {
+            if (Math.round(Math.random())) {
+                console.log("true")
+                client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[0]).emit("role", true)
+                client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[1]).emit("role", false)
+            } else {
+                console.log("false")
+                client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[0]).emit("role", false)
+                client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[1]).emit("role", true)
+            }
+        }
+        catch(err) {
+        }
+    })
+    
+    client.on("made move", (boxValue) => {
+        server.to(Array.from(client.rooms)[1]).emit("made move", boxValue)
     })
 
     client.on("disconnecting", () => {
         client.to(Array.from(client.rooms)[1]).emit("user left")
-    })
-
-    client.on("disconnect", () => {
-        console.log("user disconnected")
     })
 });
 

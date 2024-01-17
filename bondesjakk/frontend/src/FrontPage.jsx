@@ -11,12 +11,10 @@ function FrontPage() {
   useEffect(() => {
 
     function OnConnect() {
-      console.log("connected")
       setIsConnected(true)
     }
     
     function OnDisconnect() {
-      console.log("disconnected")
       setIsConnected(false);
     }
 

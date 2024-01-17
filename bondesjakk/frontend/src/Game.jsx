@@ -1,5 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Box from "./components/Box"
+import { socket } from "./App"
 
 export const board = ["", "", "", "", "", "", "", "", ""]
 export let gameIsOver = false
@@ -35,24 +36,39 @@ export function checkForWinner() {
 
 function Game() {
     const [xIsNext, setXIsNext] = useState(true)
+    const [myTurn, setMyTurn] = useState(true)
 
+    useEffect(() => {
+        socket.emit("get roles")
+        
+        function handleRoles(role) {
+            setMyTurn(() => {return role})
+            console.log(role)
+        }
+
+        socket.on("role", (role) => handleRoles(role))
+
+        return () => {
+            socket.off("role", (role) => handleRoles(role))
+        }
+    }, [])
 
     return (
         <div className="flex flex-row w-full h-screen px-64 flex-wrap justify-center content-center">
             <div className="flex flex-row w-3/5">
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={0} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={1} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={2} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={0} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={1} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={2} />
             </div>
             <div className="flex flex-row w-3/5">
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={3} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={4} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={5} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={3} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={4} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={5} />
             </div>
             <div className="flex flex-row w-3/5">
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={6} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={7} />
-                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} boxNumber={8} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={6} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={7} />
+                <Box xIsNext={xIsNext} setXIsNext={setXIsNext} myTurn={myTurn} setMyTurn={setMyTurn} boxNumber={8} />
             </div>
         </div>
     )

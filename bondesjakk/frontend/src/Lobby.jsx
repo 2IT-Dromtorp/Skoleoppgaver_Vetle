@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import {io} from "socket.io-client"
 import { useNavigate } from "react-router-dom";
 import { socket } from "./App";
 import { NameContext } from "./App";
@@ -15,7 +14,6 @@ function Lobby() {
 
         function OnGotNames(name) {
             setNames(prevNames => [...prevNames, name])
-            console.log(name)
         }
         function OnGetNames() {
             setNames([])

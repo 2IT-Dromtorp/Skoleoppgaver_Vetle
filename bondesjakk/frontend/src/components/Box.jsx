@@ -1,20 +1,37 @@
 import { useEffect, useState } from "react"
 import { board, checkForWinner, gameIsOver } from "../Game"
+import { socket } from "../App"
 
-function Box({xIsNext, setXIsNext, boxNumber}) {
+function Box({setXIsNext, boxNumber, myTurn, setMyTurn}) {
     const [value, setValue] = useState("")
 
     useEffect(() => {
+        socket.on("made move", boxValue => updateBox(boxValue))
+
+        return () => {
+            socket.off("made move", boxValue => updateBox(boxValue))
+        }
+    }, [])
+
+    useEffect(() => {
         board[boxNumber] = value
-        console.log(checkForWinner())
+        checkForWinner()
     }, [value])
 
+    function updateBox(boxValue) {
+        setMyTurn((prev) => {
+            return !prev
+        })
+        if (value || gameIsOver || boxValue != boxNumber) return
+        setXIsNext((prev) => {
+            {prev ? setValue("x") : setValue("o")}
+            return !prev
+        })
+    }
+
     function handleChange() {
-        if (value || gameIsOver) return
-        xIsNext ? 
-        setValue("x") :
-        setValue("o")
-        setXIsNext(!xIsNext)
+        if (!myTurn) return
+        socket.emit("made move", boxNumber)
     }
 
     return(
