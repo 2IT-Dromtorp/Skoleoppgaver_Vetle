@@ -21,7 +21,7 @@ function Lobby() {
         }
         function OnUserLeft() {
             socket.emit("joined room", username)
-        }
+        } 
 
         socket.on("names recieved", (name) => OnGotNames(name))
         socket.on("user left", OnUserLeft)
