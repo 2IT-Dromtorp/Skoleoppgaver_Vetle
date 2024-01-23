@@ -9,14 +9,12 @@ const server = new Server({
 server.on("connection", (client) => {
     client.on("join room", (room) => {
         if (server.sockets.adapter.rooms.get(room) === undefined || server.sockets.adapter.rooms.get(room).size >= 2) return
-        client.rooms.forEach((room) => console.log(room))
         client.join(room)
         client.emit("join lobby")
     })
     
     client.on("create room", (room) => {
         if (server.sockets.adapter.rooms.get(room) !== undefined) return
-        client.rooms.forEach((room) => console.log(room))
         client.join(room)
         client.emit("join lobby")
     })
@@ -36,11 +34,11 @@ server.on("connection", (client) => {
     client.on("get roles", () => {
         try {
             if (Math.round(Math.random())) {
-                console.log("true")
+                console.log(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1])))
                 client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[0]).emit("role", true)
                 client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[1]).emit("role", false)
             } else {
-                console.log("false")
+                console.log(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1])))
                 client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[0]).emit("role", false)
                 client.to(Array.from(server.sockets.adapter.rooms.get(Array.from(client.rooms)[1]))[1]).emit("role", true)
             }

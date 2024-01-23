@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { board, checkForWinner, gameIsOver } from "../Game"
-import { socket } from "../App"
+import { StartingContext, socket } from "../App"
+import { useNavigate } from "react-router-dom"
 
-function Box({setXIsNext, boxNumber, myTurn, setMyTurn}) {
+function Box({setXIsNext, boxNumber}) {
     const [value, setValue] = useState("")
+    const {myTurn, setMyTurn} = useContext(StartingContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
         socket.on("made move", boxValue => updateBox(boxValue))
@@ -15,14 +18,15 @@ function Box({setXIsNext, boxNumber, myTurn, setMyTurn}) {
 
     useEffect(() => {
         board[boxNumber] = value
-        checkForWinner()
+        if (checkForWinner()) {
+            navigate(`/winner/${checkForWinner()}`)
+        }
     }, [value])
 
     function updateBox(boxValue) {
-        setMyTurn((prev) => {
-            return !prev
-        })
+        setMyTurn(prev => {return !prev})
         if (value || gameIsOver || boxValue != boxNumber) return
+        console.log("🤨")
         setXIsNext((prev) => {
             {prev ? setValue("x") : setValue("o")}
             return !prev
