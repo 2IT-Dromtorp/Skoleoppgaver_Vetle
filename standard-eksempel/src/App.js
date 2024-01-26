@@ -2,7 +2,7 @@ import './App.css';
 
 function App() {
   function absolute() {
-    fetch("http://localhost:8080/api/get").then((res) => {
+    fetch("/api/get").then((res) => {
       return res.json()
     }).then((data) => {
       console.log(data.message)
