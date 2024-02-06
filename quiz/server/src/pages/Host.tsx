@@ -1,4 +1,4 @@
-function Quiz(): JSX.Element {
+function Jeopardy(): JSX.Element {
     return(
         <div>
             
@@ -6,4 +6,4 @@ function Quiz(): JSX.Element {
     )
 }
 
-export default Quiz
+export default Jeopardy
