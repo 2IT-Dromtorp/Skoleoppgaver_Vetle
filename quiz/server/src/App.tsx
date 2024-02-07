@@ -14,7 +14,7 @@ function App(): JSX.Element {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="/host" element={<Host />} />
-          <Route path="/answer" element={<Answer />} />
+          <Route path="/answer/:name" element={<Answer />} />
         </Route>
       </Routes>
     </BrowserRouter>
