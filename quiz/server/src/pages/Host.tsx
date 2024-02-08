@@ -1,87 +1,95 @@
-import { useEffect, useState } from "react";
-import axios from "axios"
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { socket } from "../App";
 
 function Host(): JSX.Element {
-    const [answer, setAnswer] = useState<string>("");
     const [name, setName] = useState<string>("");
-    const [seconds, setSeconds] = useState<number>(10);
-    const [currentQuestion, setCurrentQuestion] = useState<{"question"?: string, "answer"?: string, "category"?: string}>({})
-    const [correctAnswer, setCorrectAnswer] = useState<boolean>(false)
+    const [seconds, setSeconds] = useState<number>(15);
+    const [currentQuestion, setCurrentQuestion] = useState<{ question?: string; answer?: string; category?: string }>({});
+    const [answer, setAnswer] = useState<string>("");
+    
+    const nameRef = useRef<string>("");
+    const answerRef = useRef<boolean>(false);
+    const timerRef = useRef<NodeJS.Timeout>();
+
 
     function timer() {
         const clientTimer = setInterval(() => {
             setSeconds(prev => {
-                console.log(prev)
                 if (prev - 1 <= 0) {
-                    nextQuestion()
+                    nextQuestion();
                     clearInterval(clientTimer);
-                };
-                return prev - 1
+                }
+                return prev - 1;
             });
         }, 1000);
+        timerRef.current = clientTimer;
     }
 
-    function nextQuestion() {
-        if (correctAnswer) {
-            axios.post("/api/point", {value})
+    async function nextQuestion() {
+        const clientAnswer: boolean = answerRef.current;
+        const clientName: string = nameRef.current;
+        const clientTimer: NodeJS.Timeout | undefined = timerRef.current;
+
+        clearInterval(clientTimer);
+        if (clientAnswer) {
+            await axios.post("/api/point", { value: 1, name: clientName });
+        } else {
+            await axios.post("/api/point", { value: -1, name: clientName });
         }
-        setName("")
-        setAnswer("")
+        setName("");
+        setAnswer("");
+        answerRef.current = false;
         axios.get("/api/question").then((res) => {
-            console.log(res.data.question);
-            setCurrentQuestion(res.data.question)
-            setSeconds(10)
-        })
+            setCurrentQuestion(res.data.question);
+            setSeconds(15);
+        });
     }
 
     useEffect(() => {
-        if (answer == currentQuestion.answer) {
-            console.log("correct answer")
-            setCorrectAnswer(true)
+        if (answer.toLowerCase() === currentQuestion.answer?.toLowerCase()) {
+            answerRef.current = true;
+            nameRef.current = name;
+            socket.emit("correct answer");
+            nextQuestion();
         }
-    }, [answer, currentQuestion])
+    }, [answer, currentQuestion, name]);
 
     useEffect(() => {
-        nextQuestion()
+        nextQuestion();
 
         function onJoin() {
-            // setJoined(true);
             console.log("connected");
             socket.emit("host");
-        };
-        function onDisconnect() {
-            // setJoined(true);
-            console.log("disconnected");
-        };
-        function handleAnswer(clientAnswer: string) {
-            setAnswer(clientAnswer);
-        };
+        }
         function onClient(clientName: string) {
+            nameRef.current = clientName
             setName(clientName);
             timer();
-        };
+        }
+        function handleAnswer(clientAnswer: string) {
+            setAnswer(clientAnswer);
+        }
 
         socket.on("connect", onJoin);
-        socket.on("disconnect", onDisconnect);
-        socket.on("client connected", (clientName) => onClient(clientName));
-        socket.on("answer changed", (clientAnswer) => handleAnswer(clientAnswer));
+        socket.on("client connected", onClient);
+        socket.on("answer changed", handleAnswer);
 
         return () => {
             socket.off("connect", onJoin);
-            socket.off("disconnect", onDisconnect);
-            socket.off("answer changed", (clientAnswer) => handleAnswer(clientAnswer));
+            socket.off("client connected", onClient);
+            socket.off("answer changed", handleAnswer);
         };
     }, []);
-    
-    return(
+
+    return (
         <div>
             <p>{name}</p>
             <p>{seconds}</p>
             <p>{currentQuestion.question}</p>
             <p>{answer}</p>
         </div>
-    )
+    );
 }
 
-export default Host
+export default Host;

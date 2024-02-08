@@ -1,4 +1,4 @@
-const secondsToAnswer = 10;
+const secondsToAnswer = 15;
 
 
 const express = require("express");
@@ -14,22 +14,33 @@ const io = new Server(server);
 
 const path = require("node:path");
 
-const mongoClient = require("mongodb").MongoClient;
+const { MongoClient } = require("mongodb");
 
 const port = process.env.PORT || 8080;
-const url = "mongodb+srv://Vetle:Skole123@oppgaver.jp9p8ow.mongodb.net/";
+const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 
 
 server.listen(port, async () => {
-    const mongodb = await mongoClient.connect(url);
+    const mongodb = await MongoClient.connect(url);
     const db = mongodb.db("questions_db");
-    const oppgaver = db.collection("questions");
+    const questions = db.collection("questions");
+    const users = db.collection("brukere");
     
-    const questions = await oppgaver.find({}).project({_id: 0}).toArray()
+    const remainingQuestions = await questions.find({}).project({_id: 0}).toArray()
 
     app.get("/api/question", (req, res) => {
-        const randomQuestion = questions.splice(Math.random() * questions.length, 1)[0]
+        const randomQuestion = remainingQuestions.splice(Math.random() * remainingQuestions.length, 1)[0]
         res.status(200).json({"question": randomQuestion})
+    })
+
+    app.post("/api/point", async (req, res) => {
+        const user = await users.findOne({name: req.body.name})
+        if (user) { 
+            await users.updateOne({name: req.body.name}, {$inc: {points: req.body.value}})
+        } else {
+            await users.insertOne({name: req.body.name, points: 0 + req.body.value})
+        }
+        res.status(200).send("a")
     })
 
     app.get("*", (req, res) => {
@@ -37,26 +48,38 @@ server.listen(port, async () => {
     });
 })
 
-function handleTimer() {
-    clientConnected = true
-    setTimeout(() => {
-        clientConnected = false
-    }, secondsToAnswer * 1000)
-}
-
 let host;
 let clientConnected;
+let timeout;
+
+function handleTimer() {
+    clientConnected = true;
+    timeout = setTimeout(() => {
+        clientConnected = false
+    }, secondsToAnswer * 1000);
+}
 
 io.on("connection", (client) => {
 
     client.on("host", () => {
         host = client;
     });
+
     client.on("client", (name) => {
-        if (clientConnected || !host) return
-        host.emit("client connected", name)
-        handleTimer()
+        if (clientConnected || !host) {
+            client.emit("too slow");
+            return;
+        };
+        client.emit("answer");
+        host.emit("client connected", name);
+        handleTimer();
     });
+
+    client.on("correct answer", () => {
+        clearTimeout(timeout)
+        clientConnected = false
+    })
+
     client.on("answer changed", (value) => {
         if (!host) return;
         host.emit("answer changed", value);
