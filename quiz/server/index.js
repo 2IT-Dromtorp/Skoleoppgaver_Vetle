@@ -21,12 +21,12 @@ const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 
 
 server.listen(port, async () => {
-    const mongodb = await MongoClient.connect(url);
-    const db = mongodb.db("questions_db");
-    const questions = db.collection("questions");
-    const users = db.collection("brukere");
+    // const mongodb = await MongoClient.connect(url);
+    // const db = mongodb.db("questions_db");
+    // const questions = db.collection("questions");
+    // const users = db.collection("brukere");
     
-    const remainingQuestions = await questions.find({}).project({_id: 0}).toArray()
+    // const remainingQuestions = await questions.find({}).project({_id: 0}).toArray()
 
     app.get("/api/question", (req, res) => {
         const randomQuestion = remainingQuestions.splice(Math.random() * remainingQuestions.length, 1)[0]
@@ -40,7 +40,13 @@ server.listen(port, async () => {
         } else {
             await users.insertOne({name: req.body.name, points: 0 + req.body.value})
         }
-        res.status(200).send("a")
+        res.status(200).json({"message": "👍"})
+    })
+
+    app.post("/api/createQuestion", async (req, res) => {
+        // await questions.insertOne(req.body)
+
+        res.status(200).json({"message": "👍"})
     })
 
     app.get("*", (req, res) => {
