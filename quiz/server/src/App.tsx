@@ -5,6 +5,7 @@ import Layout from './pages/Layout';
 import HomePage from './pages/HomePage';
 import Host from './pages/Host';
 import Answer from './pages/Answer';
+import Create from './pages/Create';
 
 function App(): JSX.Element {
 
@@ -15,6 +16,7 @@ function App(): JSX.Element {
           <Route index element={<HomePage />} />
           <Route path="/host" element={<Host />} />
           <Route path="/answer/:name" element={<Answer />} />
+          <Route path="/create" element={<Create />} />
         </Route>
       </Routes>
     </BrowserRouter>
