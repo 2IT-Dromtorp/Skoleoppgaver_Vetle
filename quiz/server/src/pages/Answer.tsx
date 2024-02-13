@@ -3,10 +3,9 @@ import { socket } from "../App";
 import { useParams } from "react-router-dom";
 
 function Answer(): JSX.Element {
-    // const [joined, setJoined] = useState<boolean>(false);
     const [answer, setAnswer] = useState<string>("");
     const [canAnswer, setCanAnswer] = useState<boolean>(false);
-    const {name} = useParams<string>()
+    const {name} = useParams<string>();
 
     useEffect(() => {
         socket.emit("answer changed", answer);
@@ -26,24 +25,28 @@ function Answer(): JSX.Element {
         function onAnswer() {
             setCanAnswer(true);
         };
+        function doneAnswering() {
+            setCanAnswer(false);
+        };
 
         socket.on("connect", onJoin);
         socket.on("disconnect", onDisconnect);
         socket.on("answer", onAnswer);
         socket.on("too slow", tooSlow);
+        socket.on("done answering", doneAnswering);
 
         return () => {
             socket.off("connect", onJoin);
             socket.off("disconnect", onDisconnect);
             socket.off("answer", onAnswer);
             socket.off("too slow", tooSlow);
+            socket.off("done answering", doneAnswering);
         };
     }, []);
 
     function handleChange(value: string) {
         setAnswer(value);
     };
-    console.log(name)
 
     return(
         <div className="flex flex-col justify-evenly items-center w-full h-screen">

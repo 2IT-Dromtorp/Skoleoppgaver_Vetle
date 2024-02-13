@@ -5,11 +5,11 @@ import { socket } from "../App";
 function Host(): JSX.Element {
     const [name, setName] = useState<string>("");
     const [seconds, setSeconds] = useState<number>(15);
-    const [currentQuestion, setCurrentQuestion] = useState<{ question?: string; answer?: string; category?: string }>({});
+    const [currentQuestion, setCurrentQuestion] = useState<{ question?: string; answers?: string[]; category?: string }>({});
     const [answer, setAnswer] = useState<string>("");
+    const [correctAnswer, setCorrectAnswer] = useState<boolean>(false);
     
     const nameRef = useRef<string>("");
-    const answerRef = useRef<boolean>(false);
     const timerRef = useRef<NodeJS.Timeout>();
 
 
@@ -27,7 +27,8 @@ function Host(): JSX.Element {
     }
 
     async function nextQuestion() {
-        const clientAnswer: boolean = answerRef.current;
+        socket.emit("done answering");
+        const clientAnswer: boolean = correctAnswer;
         const clientName: string = nameRef.current;
         const clientTimer: NodeJS.Timeout | undefined = timerRef.current;
 
@@ -37,39 +38,50 @@ function Host(): JSX.Element {
         } else {
             await axios.post("/api/point", { value: -1, name: clientName });
         }
+
+        setTimeout(() => {
+            setName("");
+            setAnswer("");
+            setCorrectAnswer(false);
+            axios.get("/api/question").then((res) => {
+                setCurrentQuestion(res.data.question);
+                setSeconds(15);
+            });
+        }, 2000);
+    }
+
+    useEffect(() => {
+        currentQuestion.answers?.forEach((currentAnswer) => {
+            if (answer.toLowerCase() === currentAnswer.toLowerCase()) {
+                console.log("a")
+                setCorrectAnswer(true);
+                nameRef.current = name;
+                nextQuestion();
+            };
+        });
+    }, [answer, currentQuestion, name]);
+
+    useEffect(() => {
         setName("");
         setAnswer("");
-        answerRef.current = false;
+        setCorrectAnswer(false);
         axios.get("/api/question").then((res) => {
             setCurrentQuestion(res.data.question);
             setSeconds(15);
         });
-    }
-
-    useEffect(() => {
-        if (answer.toLowerCase() === currentQuestion.answer?.toLowerCase()) {
-            answerRef.current = true;
-            nameRef.current = name;
-            socket.emit("correct answer");
-            nextQuestion();
-        }
-    }, [answer, currentQuestion, name]);
-
-    useEffect(() => {
-        nextQuestion();
 
         function onJoin() {
             console.log("connected");
             socket.emit("host");
-        }
+        };
         function onClient(clientName: string) {
             nameRef.current = clientName
             setName(clientName);
             timer();
-        }
+        };
         function handleAnswer(clientAnswer: string) {
             setAnswer(clientAnswer);
-        }
+        };
 
         socket.on("connect", onJoin);
         socket.on("client connected", onClient);
@@ -83,11 +95,11 @@ function Host(): JSX.Element {
     }, []);
 
     return (
-        <div>
-            <p>{name}</p>
-            <p>{seconds}</p>
-            <p>{currentQuestion.question}</p>
-            <p>{answer}</p>
+        <div className="flex flex-col justify-center items-center w-full">
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{seconds}</p>
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{currentQuestion.question}</p>
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{name}</p>
+            <p className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 ${correctAnswer && "text-correct"}`}>{answer}</p>
         </div>
     );
 }

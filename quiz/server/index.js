@@ -21,14 +21,15 @@ const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 
 
 server.listen(port, async () => {
-    // const mongodb = await MongoClient.connect(url);
-    // const db = mongodb.db("questions_db");
-    // const questions = db.collection("questions");
-    // const users = db.collection("brukere");
+    const mongodb = await MongoClient.connect(url);
+    const db = mongodb.db("questions_db");
+    const questions = db.collection("questions");
+    const users = db.collection("brukere");
     
-    // const remainingQuestions = await questions.find({}).project({_id: 0}).toArray()
-
+    const remainingQuestions = await questions.find({}).project({_id: 0}).toArray()
+    
     app.get("/api/question", (req, res) => {
+        clientConnected = false
         const randomQuestion = remainingQuestions.splice(Math.random() * remainingQuestions.length, 1)[0]
         res.status(200).json({"question": randomQuestion})
     })
@@ -44,8 +45,8 @@ server.listen(port, async () => {
     })
 
     app.post("/api/createQuestion", async (req, res) => {
-        // await questions.insertOne(req.body)
-
+        await questions.insertOne(req.body)
+        
         res.status(200).json({"message": "👍"})
     })
 
@@ -81,9 +82,9 @@ io.on("connection", (client) => {
         handleTimer();
     });
 
-    client.on("correct answer", () => {
+    client.on("done answering", () => {
         clearTimeout(timeout)
-        clientConnected = false
+        io.emit("done answering")
     })
 
     client.on("answer changed", (value) => {

@@ -19,19 +19,24 @@ function Create(): JSX.Element {
 
     async function handleSubmit() {
         await axios.post("/api/createQuestion", {"question": question, "answers": answers, "category": category})
+        setQuestion("")
+        setAnswers([""])
     }
 
     return(
         <form onSubmit={e => {e.preventDefault();handleSubmit()}} className="flex flex-col items-center">
             <label className="w-full my-4">
                 <p>Spørsmål: </p>
-                <input type="text" value={question} placeholder="Quiz spørsmål" autoComplete="off" onChange={e => setQuestion(e.target.value)} className="bg-main2 rounded-md border-contrast border-2 focus:outline-none" />
+                <textarea value={question} placeholder="Quiz spørsmål" autoComplete="off" onChange={e => setQuestion(e.target.value)} className="w-full h-64 bg-main2 rounded-md border-contrast border-2 focus:outline-none" />
             </label>
             <label className="flex flex-col w-full my-4">
                 <p>Svar: </p>
                 {answers.map((answer, index) => {
                     return (
-                        <input type="text" value={answer} placeholder="Svar alternativ" autoComplete="off" onChange={e => changeAnswers(e, index)} className="bg-main2 rounded-md my-2 border-contrast border-2 focus:outline-none" />
+                        <div className="flex flex-row justify-center items-center">
+                            <input type="text" value={answer} placeholder="Svar alternativ" autoComplete="off" onChange={e => changeAnswers(e, index)} className="bg-main2 rounded-md my-2 border-contrast border-2 focus:outline-none" />
+                            <button type="button" onClick={() => setAnswers(answers.filter(a => a != answer))} className="m-2">-</button>
+                        </div>
                     )
                 })}
                 <button type="button" onClick={() => setAnswers([...answers, ""])}>+</button>
@@ -46,7 +51,7 @@ function Create(): JSX.Element {
                     <option value={"Geography and culture"} className="bg-main2 rounded-md border-contrast border-2 focus:outline-none">Geography and culture</option>
                 </select>
             </label>
-            <input type="submit" className="bg-main2 w-full my-4 rounded-md border-contrast border-2 focus:outline-none" />
+            <input type="submit" className="bg-main2 w-full my-4 rounded-md border-contrast border-2 cursor-pointer focus:outline-none" />
         </form>
     )
 }
