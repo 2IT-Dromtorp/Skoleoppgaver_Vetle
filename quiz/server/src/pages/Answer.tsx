@@ -50,8 +50,8 @@ function Answer(): JSX.Element {
 
     return(
         <div className="flex flex-col justify-evenly items-center w-full h-screen">
-            <h1 className="">{name}</h1>
-            {canAnswer && <input type="text" value={answer} onChange={e => handleChange(e.target.value)} className="w-3/4 h-32 mb-32 rounded-lg bg-main2 border-contrast border-2 focus:outline-none" />}
+            <h1 className="p-3 bg-main2 bg-opacity-75 border-2 border-contrast rounded">{name}</h1>
+            {canAnswer && <input type="text" value={answer} onChange={e => handleChange(e.target.value)} className="w-3/4 h-32 p-4 mb-32 rounded-lg bg-main2 border-contrast border-2 focus:outline-none" />}
         </div>
     );
 }

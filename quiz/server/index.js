@@ -1,6 +1,3 @@
-const secondsToAnswer = 15;
-
-
 const express = require("express");
 const app = express();
 app.use(express.json());
@@ -15,9 +12,9 @@ const io = new Server(server);
 const path = require("node:path");
 
 const { MongoClient } = require("mongodb");
+const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 
 const port = process.env.PORT || 8080;
-const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 
 
 server.listen(port, async () => {
@@ -57,14 +54,6 @@ server.listen(port, async () => {
 
 let host;
 let clientConnected;
-let timeout;
-
-function handleTimer() {
-    clientConnected = true;
-    timeout = setTimeout(() => {
-        clientConnected = false
-    }, secondsToAnswer * 1000);
-}
 
 io.on("connection", (client) => {
 
@@ -79,11 +68,10 @@ io.on("connection", (client) => {
         };
         client.emit("answer");
         host.emit("client connected", name);
-        handleTimer();
+        clientConnected = true;
     });
 
     client.on("done answering", () => {
-        clearTimeout(timeout)
         io.emit("done answering")
     })
 

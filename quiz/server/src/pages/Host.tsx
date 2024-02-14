@@ -11,6 +11,7 @@ function Host(): JSX.Element {
     
     const nameRef = useRef<string>("");
     const timerRef = useRef<NodeJS.Timeout>();
+    const correctAnswerRef = useRef<boolean>(false)
 
 
     function timer() {
@@ -28,11 +29,12 @@ function Host(): JSX.Element {
 
     async function nextQuestion() {
         socket.emit("done answering");
-        const clientAnswer: boolean = correctAnswer;
+        const clientAnswer: boolean = correctAnswerRef.current;
         const clientName: string = nameRef.current;
         const clientTimer: NodeJS.Timeout | undefined = timerRef.current;
 
         clearInterval(clientTimer);
+
         if (clientAnswer) {
             await axios.post("/api/point", { value: 1, name: clientName });
         } else {
@@ -43,18 +45,19 @@ function Host(): JSX.Element {
             setName("");
             setAnswer("");
             setCorrectAnswer(false);
+            correctAnswerRef.current = false
             axios.get("/api/question").then((res) => {
                 setCurrentQuestion(res.data.question);
                 setSeconds(15);
             });
-        }, 2000);
+        }, 5000);
     }
 
     useEffect(() => {
         currentQuestion.answers?.forEach((currentAnswer) => {
             if (answer.toLowerCase() === currentAnswer.toLowerCase()) {
-                console.log("a")
                 setCorrectAnswer(true);
+                correctAnswerRef.current = true
                 nameRef.current = name;
                 nextQuestion();
             };
@@ -96,10 +99,10 @@ function Host(): JSX.Element {
 
     return (
         <div className="flex flex-col justify-center items-center w-full">
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{seconds}</p>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{currentQuestion.question}</p>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32">{name}</p>
-            <p className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 ${correctAnswer && "text-correct"}`}>{answer}</p>
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{seconds}</p>
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{currentQuestion.question}</p>
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{name}</p>
+            <p className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75 ${correctAnswer && "text-correct"}`}>{answer}</p>
         </div>
     );
 }
