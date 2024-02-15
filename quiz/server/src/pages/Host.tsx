@@ -17,13 +17,13 @@ function Host(): JSX.Element {
     function timer() {
         const clientTimer = setInterval(() => {
             setSeconds(prev => {
-                if (prev - 1 <= 0) {
+                if ((prev * 10 - 0.1 * 10) / 10 <= 0) {
                     nextQuestion();
                     clearInterval(clientTimer);
                 }
-                return prev - 1;
+                return ((prev * 10 - 0.1 * 10) / 10);
             });
-        }, 1000);
+        }, 100);
         timerRef.current = clientTimer;
     }
 
@@ -50,7 +50,7 @@ function Host(): JSX.Element {
                 setCurrentQuestion(res.data.question);
                 setSeconds(15);
             });
-        }, 5000);
+        }, 5000); 
     }
 
     useEffect(() => {
@@ -99,7 +99,9 @@ function Host(): JSX.Element {
 
     return (
         <div className="flex flex-col justify-center items-center w-full">
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{seconds}</p>
+            <div className="absolute flex justify-center items-center top-6 right-6 rounded-full w-16 h-16 z-50 border-4 border-contrast isolate" style={{background: `conic-gradient(rgba(255,255,255,0) ${360 - seconds * 24}deg, rgba(255,255,255,1) ${360 - seconds * 24}deg)`}}>
+                <p className="mix-blend-difference">{Math.round(seconds)}</p>
+            </div>
             <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{currentQuestion.question}</p>
             <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75">{name}</p>
             <p className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/3 h-32 bg-opacity-75 ${correctAnswer && "text-correct"}`}>{answer}</p>

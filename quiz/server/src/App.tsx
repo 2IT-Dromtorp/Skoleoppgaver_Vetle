@@ -1,6 +1,6 @@
 import './index.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import {io} from "socket.io-client"
+import { io } from "socket.io-client"
 import Layout from './pages/Layout';
 import HomePage from './pages/HomePage';
 import Host from './pages/Host';
