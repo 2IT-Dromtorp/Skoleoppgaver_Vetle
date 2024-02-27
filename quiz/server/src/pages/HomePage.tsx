@@ -1,10 +1,10 @@
 function HomePage(): JSX.Element {
-    return(
+    return (
         <>
             <p>hei</p>
             <button>Start spill</button>
         </>
-    )
+    );
 }
 
-export default HomePage
+export default HomePage;
