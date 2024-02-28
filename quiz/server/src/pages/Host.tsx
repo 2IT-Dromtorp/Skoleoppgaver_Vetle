@@ -35,10 +35,7 @@ function Host(): JSX.Element {
 
     function getLeaderboard() {
         axios.get("/api/getLeaderboard").then((res) => {
-            const leaderboardData: { name: string; points: number }[] =
-                res.data;
-            leaderboardData.sort((a, b) => a.points - b.points).reverse();
-            setLeaderboard(leaderboardData);
+            setLeaderboard(res.data);
         });
     }
 

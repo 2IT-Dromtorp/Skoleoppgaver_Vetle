@@ -61,6 +61,8 @@ server.listen(port, async () => {
     app.get("/api/getLeaderboard", async (req, res) => {
         const leaderboard = await users.find({}).project({ _id: 0 }).toArray();
 
+        leaderboard.sort((a, b) => a.points - b.points).reverse();
+
         res.status(200).json(leaderboard);
     });
 
@@ -69,12 +71,12 @@ server.listen(port, async () => {
     });
 });
 
-let host;
-let clientConnected;
+let host = undefined;
+let clientConnected = false;
 
 io.on("connection", (client) => {
     client.on("host", () => {
-        if (!host) return;
+        if (host) return;
         host = client;
     });
 
