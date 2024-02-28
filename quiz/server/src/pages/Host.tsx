@@ -126,14 +126,14 @@ function Host(): JSX.Element {
             >
                 <p className="mix-blend-difference">{Math.round(seconds)}</p>
             </div>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-1/3 h-32 bg-opacity-75">
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
                 {currentQuestion.question}
             </p>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-1/3 h-32 bg-opacity-75">
+            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75">
                 {name}
             </p>
             <p
-                className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-1/3 h-32 bg-opacity-75 ${
+                className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75 ${
                     correctAnswer && "text-correct"
                 }`}
             >

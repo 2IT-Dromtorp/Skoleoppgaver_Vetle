@@ -74,6 +74,7 @@ let clientConnected;
 
 io.on("connection", (client) => {
     client.on("host", () => {
+        if (!host) return;
         host = client;
     });
 
@@ -97,6 +98,6 @@ io.on("connection", (client) => {
     });
 
     client.on("disconnecting", () => {
-        if (host == client) host = undefined
-    })
+        if (host == client) host = undefined;
+    });
 });
