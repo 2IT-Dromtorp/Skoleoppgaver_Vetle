@@ -6,18 +6,20 @@ import Leaderboard from "../components/Leaderboard";
 function Host(): JSX.Element {
     const [name, setName] = useState<string>("");
     const [seconds, setSeconds] = useState<number>(15);
-    const [currentQuestion, setCurrentQuestion] = useState<{
-        question?: string;
-        answers?: string[];
-        category?: string;
-    }>({});
     const [answer, setAnswer] = useState<string>("");
     const [correctAnswer, setCorrectAnswer] = useState<boolean>(false);
     const [leaderboard, setLeaderboard] =
         useState<{ name: string; points: number }[]>();
+    const [question, setQuestion] = useState<string>("");
 
+    const currentQuestion = useRef<{
+        question?: string;
+        answers?: string[];
+        category?: string;
+    }>({});
     const nameRef = useRef<string>("");
     const timerRef = useRef<NodeJS.Timeout>();
+    const questionTimerRef = useRef<NodeJS.Timeout>();
     const correctAnswerRef = useRef<boolean>(false);
 
     function timer() {
@@ -39,6 +41,28 @@ function Host(): JSX.Element {
         });
     }
 
+    function handleQuestion() {
+        let second: number = 10;
+        questionTimerRef.current = setInterval(() => {
+            if (second <= 0) {
+                clearInterval(questionTimerRef.current);
+            } else {
+                setQuestion(
+                    currentQuestion.current.question?.substring(
+                        0,
+                        Math.round(
+                            currentQuestion.current.question.length -
+                                second *
+                                    (currentQuestion.current.question.length /
+                                        10)
+                        )
+                    ) || ""
+                );
+                second = (second * 10 - 0.1 * 10) / 10;
+            }
+        }, 100);
+    }
+
     async function nextQuestion() {
         socket.emit("done answering");
         const clientAnswer: boolean = correctAnswerRef.current;
@@ -58,16 +82,17 @@ function Host(): JSX.Element {
             setAnswer("");
             setCorrectAnswer(false);
             correctAnswerRef.current = false;
+            getLeaderboard();
             axios.get("/api/question").then((res) => {
-                setCurrentQuestion(res.data.question);
+                currentQuestion.current = res.data.question;
+                handleQuestion();
                 setSeconds(15);
-                getLeaderboard();
             });
         }, 5000);
     }
 
     useEffect(() => {
-        currentQuestion.answers?.forEach((currentAnswer) => {
+        currentQuestion.current.answers?.forEach((currentAnswer) => {
             if (answer.toLowerCase() === currentAnswer.toLowerCase()) {
                 setCorrectAnswer(true);
                 correctAnswerRef.current = true;
@@ -83,8 +108,9 @@ function Host(): JSX.Element {
         setCorrectAnswer(false);
         getLeaderboard();
         axios.get("/api/question").then((res) => {
-            setCurrentQuestion(res.data.question);
+            currentQuestion.current = res.data.question;
             setSeconds(15);
+            handleQuestion();
         });
 
         function onJoin() {
@@ -93,6 +119,7 @@ function Host(): JSX.Element {
         }
         function onClient(clientName: string) {
             nameRef.current = clientName;
+            clearInterval(questionTimerRef.current);
             setName(clientName);
             timer();
         }
@@ -124,7 +151,7 @@ function Host(): JSX.Element {
                 <p className="mix-blend-difference">{Math.round(seconds)}</p>
             </div>
             <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
-                {currentQuestion.question}
+                {question}
             </p>
             <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75">
                 {name}
