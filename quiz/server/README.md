@@ -36,12 +36,18 @@ npm create vite@latest server -- --template react-ts
 ## Endepunkter
 
 **get /host** sender siden verten skal bruke på skjermen  
-**get /answer/:name** sender tilbake siden som brukes av deltakerne når de skal svare
-**get /create** sender tilbake siden som brukes til å lage nye spørsmål
-**get /api/question** sender tilbake et nytt spørsmål av variabelen remainingQuestions
-**post /api/point** oppdaterer poengsummen til en spiller basert på navnet og verdien sendt inn. Lager en ny bruker i databasen dersom de ikke finnes
-**post /api/createQuestion** legger til et spørsmål baset på verdiene sendt inn
-**get /api/leaderboard** sender tilbake en liste over alle spillerne i synkende rekkefølge etter poeng
+**get /answer/:name** sender tilbake siden som brukes av deltakerne når de skal svare  
+**get /create** sender tilbake siden som brukes til å lage nye spørsmål  
+**get /api/question** sender tilbake et nytt spørsmål av variabelen remainingQuestions  
+**post /api/point** oppdaterer poengsummen til en spiller basert på navnet og verdien sendt inn. Lager en ny bruker i databasen dersom de ikke finnes  
+**post /api/createQuestion** legger til et spørsmål baset på verdiene sendt inn  
+**get /api/leaderboard** sender tilbake en liste over alle spillerne i synkende rekkefølge etter poeng  
+
+## Samarbeidspartnere
+
+| Person | Lenke |
+| --- | --- |
+| Matheo | https://github.com/2ITB-Dromtorp/Skoleoppgaver_Matheo |
 
 ## Lisens
 
