@@ -17,6 +17,7 @@ const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 const port = process.env.PORT || 8080;
 
 server.listen(port, async () => {
+    console.log(`Server running on port ${port}`)
     const mongodb = await MongoClient.connect(url);
     const db = mongodb.db("questions_db");
     const questions = db.collection("questions");
@@ -54,13 +55,13 @@ server.listen(port, async () => {
                 points: 0 + req.body.value,
             });
         }
-        res.status(200).json({ message: "👍" });
+        res.status(200).json({ message: "Point added" });
     });
 
     app.post("/api/createQuestion", async (req, res) => {
         await questions.insertOne(req.body);
 
-        res.status(200).json({ message: "👍" });
+        res.status(200).json({ message: "Question added" });
     });
 
     app.get("/api/getLeaderboard", async (req, res) => {
