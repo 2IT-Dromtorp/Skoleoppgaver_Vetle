@@ -22,9 +22,9 @@ Databasen heter: questions_db
 
 Databasen har to collections: brukere og questions
 
-Brukere sine dokumenter ser slik ut:
+brukere sine dokumenter ser slik ut:
 
-```json
+```ts
 {
     _id: ObjectID, // En id satt av MongoDB automatisk
     name: string, // Navnet på spilleren
@@ -32,9 +32,9 @@ Brukere sine dokumenter ser slik ut:
 }
 ```
 
-Questions sine dokumenter ser slik ut
+questions sine dokumenter ser slik ut
 
-```json
+```ts
 {
     _id: ObjectID, // En id satt av MongoDB automatisk
     question: string, // Spørsmålet som stilles
