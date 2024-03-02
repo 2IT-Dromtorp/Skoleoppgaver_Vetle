@@ -42,6 +42,7 @@ function Host(): JSX.Element {
     }
 
     function handleQuestion() {
+        if (!currentQuestion.current) return;
         let second: number = 10;
         questionTimerRef.current = setInterval(() => {
             if (second <= 0) {
@@ -92,6 +93,7 @@ function Host(): JSX.Element {
     }
 
     useEffect(() => {
+        if (!currentQuestion.current.question) return;
         currentQuestion.current.answers?.forEach((currentAnswer) => {
             if (answer.toLowerCase() === currentAnswer.toLowerCase()) {
                 setCorrectAnswer(true);
@@ -140,29 +142,41 @@ function Host(): JSX.Element {
 
     return (
         <div className="flex flex-col justify-center items-center w-full">
-            <div
-                className="absolute flex justify-center items-center top-6 right-6 rounded-full w-16 h-16 z-50 border-4 border-contrast isolate"
-                style={{
-                    background: `conic-gradient(rgba(255,255,255,0) ${
-                        360 - seconds * 24
-                    }deg, rgba(255,255,255,1) ${360 - seconds * 24}deg)`,
-                }}
-            >
-                <p className="mix-blend-difference">{Math.round(seconds)}</p>
-            </div>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
-                {question}
-            </p>
-            <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75">
-                {name}
-            </p>
-            <p
-                className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75 ${
-                    correctAnswer && "text-correct"
-                }`}
-            >
-                {answer}
-            </p>
+            {question ? (
+                <>
+                    <div
+                        className="absolute flex justify-center items-center top-6 right-6 rounded-full w-16 h-16 z-50 border-4 border-contrast isolate"
+                        style={{
+                            background: `conic-gradient(rgba(255,255,255,0) ${
+                                360 - seconds * 24
+                            }deg, rgba(255,255,255,1) ${
+                                360 - seconds * 24
+                            }deg)`,
+                        }}
+                    >
+                        <p className="mix-blend-difference">
+                            {Math.round(seconds)}
+                        </p>
+                    </div>
+                    <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
+                        {question}
+                    </p>
+                    <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75">
+                        {name}
+                    </p>
+                    <p
+                        className={`flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-32 bg-opacity-75 ${
+                            correctAnswer && "text-correct"
+                        }`}
+                    >
+                        {answer}
+                    </p>
+                </>
+            ) : (
+                <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
+                    Alle 10 spørsmålene er stilt
+                </p>
+            )}
             <Leaderboard leaderboard={leaderboard} />
         </div>
     );

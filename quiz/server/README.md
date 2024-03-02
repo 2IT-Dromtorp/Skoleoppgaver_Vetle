@@ -2,6 +2,18 @@
 
 Dette er en quiz app laget i React.
 
+## Innholdsfortegnelse
+
+1. [Installasjon](#installasjon)
+2. [For utviklere](#for-utviklere)
+    1. [Databasen](#databasen)
+    2. [Viktig kode](#viktig-kode)
+3. [Pakker brukt](#pakker-brukt)
+4. [Script](#script)
+5. [Endepunkter](#endepunkter)
+6. [Samarbeidspartnere](#samarbeidspartnere)
+7. [Lisens](#lisens)
+
 ## Installasjon
 
 Denne appen ble installert av Vite med React TypeScript
@@ -100,6 +112,40 @@ useEffect(() => {
 ```
 
 Sjekker om det brukeren har skrevet inn er likt som noen av svar-alternativene, hver gang svaret oppdaterer seg. Hvis det stemmer går den til ett nytt spørsmål.
+
+**Front-end**
+
+```js
+async function nextQuestion() {
+    socket.emit("done answering");
+    const clientAnswer: boolean = correctAnswerRef.current;
+    const clientName: string = nameRef.current;
+    const clientTimer: NodeJS.Timeout | undefined = timerRef.current;
+
+    clearInterval(clientTimer);
+
+    if (clientAnswer) {
+        await axios.post("/api/point", { value: 1, name: clientName });
+    } else {
+        await axios.post("/api/point", { value: -1, name: clientName });
+    }
+
+    setTimeout(() => {
+        setName("");
+        setAnswer("");
+        setCorrectAnswer(false);
+        correctAnswerRef.current = false;
+        getLeaderboard();
+        axios.get("/api/question").then((res) => {
+            currentQuestion.current = res.data.question;
+            handleQuestion();
+            setSeconds(15);
+        });
+    }, 5000);
+}
+```
+
+Sender en varsling til brukeren som gjør at brukeren ikke lenger kan svare. Den finner ut hvilken bruker som svarte, og om brukeren hadde rett. Den fjerner tiemren. Den oppdaterer brukerens dokument i databasen. Den venter i 5 sekunder før den godtar en ny bruker og henter et nytt spørsmål.
 
 ## Pakker brukt
 
