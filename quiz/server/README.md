@@ -14,6 +14,39 @@ npm create vite@latest server -- --template react-ts
 
 ## For utviklere
 
+### Databasen
+
+**Denne appen bruker MongoDB**
+
+Databasen heter: questions_db
+
+Databasen har to collections: brukere og questions
+
+Brukere sine dokumenter ser slik ut:
+
+```json
+{
+    _id: ObjectID, // En id satt av MongoDB automatisk
+    name: string, // Navnet på spilleren
+    points: number // Hvor mange poeng spilleren har
+}
+```
+
+Questions sine dokumenter ser slik ut
+
+```json
+{
+    _id: ObjectID, // En id satt av MongoDB automatisk
+    question: string, // Spørsmålet som stilles
+    category: string, // Kategorien spørsmålet tilhører, brukes foreløpig ikke til noe
+    answers: Array<string>, // Svarene som skal bli godtatt som korrekte
+}
+```
+
+### Viktig kode
+
+**Back-end**
+
 ```js
 client.on("host", () => {
     if (host) return;
@@ -22,6 +55,51 @@ client.on("host", () => {
 ```
 
 Skjer når noen går inn på **/host** endepunktet. Sjekker først om det allerede finne en host, og hvis det ikke gjør det, setter den variabelen host til seg selv.
+
+**Back-end**
+
+```js
+client.on("client", (name) => {
+    if (clientConnected || !host) {
+        client.emit("too slow");
+        return;
+    }
+    client.emit("answer");
+    host.emit("client connected", name);
+    clientConnected = true;
+});
+```
+
+**Front-end**
+
+```js
+function onClient(clientName: string) {
+    nameRef.current = clientName;
+    clearInterval(questionTimerRef.current);
+    setName(clientName);
+    timer();
+}
+socket.on("client connected", onClient);
+```
+
+Skjer når noen går inn på **/answer/:name** endepunktet. Sjekker om det ikke finnes en host og om det allerede er en bruker som svarer. Dersom noen av disse er sanne får ikke brukeren lov til svare, ellers kan brukeren begynne å svare, og timeren starter.
+
+**Front-end**
+
+```js
+useEffect(() => {
+    currentQuestion.current.answers?.forEach((currentAnswer) => {
+        if (answer.toLowerCase() === currentAnswer.toLowerCase()) {
+            setCorrectAnswer(true);
+            correctAnswerRef.current = true;
+            nameRef.current = name;
+            nextQuestion();
+        }
+    });
+}, [answer, currentQuestion, name]);
+```
+
+Sjekker om det brukeren har skrevet inn er likt som noen av svar-alternativene, hver gang svaret oppdaterer seg. Hvis det stemmer går den til ett nytt spørsmål.
 
 ## Pakker brukt
 
