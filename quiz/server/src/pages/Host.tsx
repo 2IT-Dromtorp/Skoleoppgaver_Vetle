@@ -64,6 +64,26 @@ function Host(): JSX.Element {
         }, 100);
     }
 
+    async function tenNewQuestion() {
+        await axios.post("/api/tenNewQuestions");
+
+        setName("");
+        setAnswer("");
+        setCorrectAnswer(false);
+        getLeaderboard();
+        axios.get("/api/question").then((res) => {
+            currentQuestion.current = res.data.question;
+            setSeconds(15);
+            handleQuestion();
+        });
+    }
+
+    async function resetQuestions() {
+        await axios.post("/api/resetQuestions");
+
+        await tenNewQuestion();
+    }
+
     async function nextQuestion() {
         socket.emit("done answering");
         const clientAnswer: boolean = correctAnswerRef.current;
@@ -173,9 +193,17 @@ function Host(): JSX.Element {
                     </p>
                 </>
             ) : (
-                <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
-                    Alle 10 spørsmålene er stilt
-                </p>
+                <>
+                    <p className="flex justify-center items-center m-4 bg-main2 border-contrast p-4 border-4 rounded-lg w-2/5 h-64 bg-opacity-75">
+                        Alle 10 spørsmålene er stilt!
+                    </p>
+                    <button onClick={() => tenNewQuestion()}>
+                        10 nye spørmsål
+                    </button>
+                    <button onClick={() => resetQuestions()}>
+                        Start spillet på nytt
+                    </button>
+                </>
             )}
             <Leaderboard leaderboard={leaderboard} />
         </div>

@@ -17,21 +17,31 @@ const url = "mongodb+srv://Vetle:Skole123@questions.jp9p8ow.mongodb.net/";
 const port = process.env.PORT || 8080;
 
 server.listen(port, async () => {
-    console.log(`Server running on port ${port}`)
+    console.log(`Server running on port ${port}`);
     const mongodb = await MongoClient.connect(url);
     const db = mongodb.db("questions_db");
     const questions = db.collection("questions");
     const users = db.collection("brukere");
 
-    const allQuestion = await questions.find({}).project({ _id: 0 }).toArray();
-
+    let allQuestion = [];
     const remainingQuestions = [];
 
-    for (let i = 0; i < 10; i++) {
-        remainingQuestions.push(
-            allQuestion.pop([Math.floor(Math.random() * allQuestion.length)])
-        );
+    async function getAllQuestions() {
+        allQuestion = await questions.find({}).project({ _id: 0 }).toArray();
     }
+
+    function getTenQuestions() {
+        for (let i = 0; i < 10; i++) {
+            remainingQuestions.push(
+                allQuestion.pop([
+                    Math.floor(Math.random() * allQuestion.length),
+                ])
+            );
+        }
+    }
+
+    await getAllQuestions();
+    getTenQuestions();
 
     app.get("/api/question", (req, res) => {
         clientConnected = false;
@@ -70,6 +80,16 @@ server.listen(port, async () => {
         leaderboard.sort((a, b) => a.points - b.points).reverse();
 
         res.status(200).json(leaderboard);
+    });
+
+    app.post("/api/tenNewQuestions", (req, res) => {
+        getTenQuestions();
+        res.status(200).json({ message: "Ten new questions requested" });
+    });
+
+    app.post("/api/resetQuestions", async (req, res) => {
+        await getAllQuestions();
+        res.status(200).json({ message: "Questions reset" });
     });
 
     app.get("*", (req, res) => {
