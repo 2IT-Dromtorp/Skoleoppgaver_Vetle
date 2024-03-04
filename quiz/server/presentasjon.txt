@@ -1,0 +1,12 @@
+Nettsiden:
+1. Gå inn på forsiden
+2. Naviger meg til /host
+3. Skriv riktig task til alle NFC-taggene
+4. Forklar hvordan man spiller
+5. Spill spillet
+
+Koden:
+1. Vise og forklare hva som skjer når man går inn på /host
+2. Vise og forklare hva som skjer når man går inn på /answer/:name
+3. Forklare endepunktene
+4. Forklare "animasjonene"
