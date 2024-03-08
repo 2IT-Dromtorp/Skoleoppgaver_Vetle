@@ -1,12 +1,13 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
     import { navigate } from "svelte-routing";
+    import { writable } from "svelte/store";
 
     let top = 0
     let left = 0
     let size = 1
 
-    $: dots = [{}]
+    const dots = writable([{}])
 
     afterUpdate(() => {
         if (!localStorage.getItem("jwt")) {
@@ -38,7 +39,7 @@
             default:
                 break
         }
-        $dots({top: top, left: left, size: size})
+        dots.update((prev) => [...prev, {top: top, left: left, size: size}])
     }
 
     function handleClick() {
@@ -52,8 +53,7 @@
 
 {#if localStorage.getItem("jwt")}
 {#each $dots as dot}
-    {console.log(dot)}
-    <div class="dot" style="top:{dot.top};left:{dot.left};width:{dot.size};height:{dot.size};" />
+    <div class="dot" style="top:calc({dot.top} * 1px);left:calc({dot.left} * 1px);width:calc({dot.size} * 1px);height:calc({dot.size} * 1px);"></div>
 {/each}
 <div id="dot" style="--top:{left};--left:{top}; --size:{size}"></div>
 {/if}
@@ -63,7 +63,7 @@
         width: calc(1px * var(--size));
         height: calc(1px * var(--size));
         border-radius: 100%;
-        background-color: red;
+        background-color: lime;
         position: absolute;
         top: calc( var(--left) * 1px);
         left: calc( var(--top) * 1px);
