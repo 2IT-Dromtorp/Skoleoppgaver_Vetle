@@ -26,21 +26,36 @@ app.listen(PORT, () => {
         res.status(200).json({ message: "👍" });
     });
 
-    app.post("/api/register", (req, res) => {
-        res.status(200).json({ message: "👍" });
+    app.get("/api/checkAuthority", async (req, res) => {
+        users = await getCollection("elever");
+
+        const authority = await users
+            .find({ jwt: req.headers.jwt })
+            .project({ _id: 0, authority: 1 })[0];
+
+        console.log(authority);
+        console.log(req.query.requiredAuthority);
+
+        const result = authority
+            ? authority == req.query.requiredAuthority
+                ? true
+                : false
+            : false;
+
+        res.status(200).json({ message: "👍", result: result });
     });
 
     app.post("/api/addStudent", async (req, res) => {
         console.log(req.body);
 
-        const collection = await getCollection("elever")
+        const collection = await getCollection("elever");
 
         try {
-            await collection.insertOne(req.body)
+            await collection.insertOne(req.body);
             res.status(200).json({ message: "Student added" });
         } catch (err) {
-            console.error(err)
-            res.status(400).json({"message": `Failed to add student: ${err}`})
+            console.error(err);
+            res.status(400).json({ message: `Failed to add student: ${err}` });
         }
     });
 

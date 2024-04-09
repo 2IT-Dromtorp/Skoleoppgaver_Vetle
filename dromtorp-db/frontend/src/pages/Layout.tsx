@@ -6,7 +6,7 @@ function Layout(): JSX.Element {
             <nav>
                 <Link to={"/"}>Home</Link>
                 <Link to={"/login"}>Log in</Link>
-                <Link to={"/register"}>Register</Link>
+                <Link to={"/addStudent"}>Add student</Link>
             </nav>
             <div>
                 <Outlet />
