@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 
 function Login(): JSX.Element {
@@ -5,7 +6,12 @@ function Login(): JSX.Element {
     const [password, setPassword] = useState<string>("");
 
     function handleSubmit() {
-        console.log("s");
+        axios
+            .post("/api/login", { username: username, password: password })
+            .then((res) => {
+                if (res.status != 200) throw new Error("NO!");
+                localStorage.setItem("jwt", res.data.jwt);
+            });
     }
 
     return (
@@ -18,7 +24,7 @@ function Login(): JSX.Element {
                 }}
             >
                 <label>
-                    <h2>Name</h2>
+                    <h2>Username</h2>
                     <input
                         type="text"
                         value={username}
