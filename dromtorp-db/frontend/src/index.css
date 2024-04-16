@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+
+@media (prefer-color-scheme: light){
+    * {
+        background: linear-gradient(to right, red, orange, yellow, green, cyan, blue, purple, red) !important;
+        color: blue !important;
+        border: 1px solid green !important;
+    }
+}
+
