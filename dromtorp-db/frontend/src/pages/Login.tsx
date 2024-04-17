@@ -1,7 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login(): JSX.Element {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
@@ -11,7 +14,8 @@ function Login(): JSX.Element {
             .then((res) => {
                 if (res.status != 200) throw new Error("NO!");
                 localStorage.setItem("jwt", res.data.jwt);
-            });
+                navigate("/profile");
+            }).catch();
     }
 
     return (

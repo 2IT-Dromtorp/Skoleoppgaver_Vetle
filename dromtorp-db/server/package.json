@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "server": "node index.js"
+    "dev": "nodemon --env-file=.env index.js",
+    "server": "node --env-file=.env index.js"
   },
   "author": "",
   "license": "MIT",

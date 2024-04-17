@@ -25,7 +25,7 @@ function Create(): JSX.Element {
             question: question,
             answers: answers,
             category: category,
-        });
+        }).catch();
         setQuestion("");
         setAnswers([""]);
     }

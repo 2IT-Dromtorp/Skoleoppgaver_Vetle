@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 function Equipment(): JSX.Element {
     const [allEquipment, setEquipment] = useState<
-        { name: string; burrowed: boolean, _id: string }[]
+        { name: string; burrowed: boolean; _id: string }[]
     >([]);
 
     useEffect(() => {
@@ -12,12 +12,15 @@ function Equipment(): JSX.Element {
                 await axios
                     .get("/api/getAllEquipment")
                     .then((res) => res.data.data)
+                    .catch((err: any) =>
+                        console.error(err.response.data.message)
+                    )
             );
         })();
     }, []);
 
     function handleClick(id: string) {
-        axios.post("/api/burrowRequest", {equipment: id});
+        axios.post("/api/burrowRequest", { equipment: id });
     }
 
     return (
@@ -37,7 +40,11 @@ function Equipment(): JSX.Element {
                                 {equipment.name}
                             </p>
                             {!equipment.burrowed && (
-                                <button onClick={() => handleClick(equipment._id)}>burrow</button>
+                                <button
+                                    onClick={() => handleClick(equipment._id)}
+                                >
+                                    burrow
+                                </button>
                             )}
                         </>
                     );

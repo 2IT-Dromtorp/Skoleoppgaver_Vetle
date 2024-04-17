@@ -33,7 +33,11 @@ function AddStudent(): JSX.Element {
 
     useEffect(() => {
         (async () => {
-            setAccess(await CheckAuthority(2));
+            try {
+                setAccess(await CheckAuthority(2));
+            } catch (err: any) {
+                console.error(err.message);
+            }
         })();
     }, []);
 
@@ -67,8 +71,8 @@ function AddStudent(): JSX.Element {
             password: "Skole123",
             authority: 0,
         };
-        await axios.post("/api/addStudent", studentData);
-        await axios.post("/api/addUser", loginData);
+        await axios.post("/api/addStudent", studentData).catch();
+        await axios.post("/api/addUser", loginData).catch();
     }
 
     return (

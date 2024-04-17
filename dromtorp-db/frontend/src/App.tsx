@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import AddStudent from "./pages/AddStudent";
 import AddEquipment from "./pages/AddEquipment";
 import Equipment from "./pages/Equipment";
+import Profile from "./pages/Profile";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Route path="/" element={<Layout />}>
                     <Route index element={<HomePage />} />
                     <Route path="login" element={<Login />} />
+                    <Route path="profile" element={<Profile />} />
                     <Route path="addStudent" element={<AddStudent />} />
                     <Route path="addEquipment" element={<AddEquipment />} />
                     <Route path="equipment" element={<Equipment />} />

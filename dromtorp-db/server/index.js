@@ -17,18 +17,30 @@ async function getCollection(collection) {
 
 function verifyToken(req, res, next) {
     const token = req.header("Authorization");
-    if (!token) return res.status(401).json({ error: "Access denied" });
+    if (!token) return res.status(401).json({ message: "Access denied" });
     try {
         const decoded = jwt.verify(token, "bbop");
         req.userId = decoded.userId;
         next();
     } catch (error) {
-        res.status(401).json({ error: "Invalid token" });
+        res.status(401).json({ message: "Invalid token" });
     }
 }
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
+
+    (async () => {
+        const users = await getCollection("users");
+        const allUsers = await users.find({}).toArray();
+        if (allUsers.length > 0) return;
+        await users.insertOne({
+            loginName: process.env.ADMIN_USERNAME,
+            password: process.env.ADMIN_PASSWORD,
+            salt: "",
+            authority: 5
+        })
+    })();
 
     app.get("/api/test", (req, res) => {
         res.status(200).json({ message: "👍" });
@@ -66,18 +78,15 @@ app.listen(PORT, () => {
     });
 
     app.get("/api/checkAuthority", verifyToken, async (req, res) => {
-        users = await getCollection("elever");
+        const users = await getCollection("users");
 
-        const authority = await users.findOne(
-            { _id: req.userId },
-            { projection: { _id: 0, authority: 1 } }
-        );
+        const authority = await users.find({}).toArray();
 
         console.log(authority);
         console.log(req.query.requiredAuthority);
 
         const result = authority
-            ? authority == req.query.requiredAuthority
+            ? authority.authority == req.query.requiredAuthority
                 ? true
                 : false
             : false;
@@ -151,7 +160,7 @@ app.listen(PORT, () => {
 
     app.post("/api/burrowRequest", verifyToken, async (req, res) => {
         try {
-            const burrowRequests = await getCollection("burrowers");
+            const burrowRequests = await getCollection("requests");
 
             const request = {
                 date: `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`,

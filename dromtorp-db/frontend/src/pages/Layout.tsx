@@ -23,6 +23,7 @@ function Layout(): JSX.Element {
                 <Link to={"/equipment"} className="bg-slate-400 py-4 px-10 rounded-sm">Equipment</Link>
                 <Link to={"/addStudent"} className="bg-slate-400 py-4 px-10 rounded-sm">Add student</Link>
                 <Link to={"/addEquipment"} className="bg-slate-400 py-4 px-10 rounded-sm">Add equipment</Link>
+                <Link to={"/profile"} className="bg-slate-400 py-4 px-10 rounded-sm">Profile</Link>
             </nav>
             <div>
                 <Outlet />

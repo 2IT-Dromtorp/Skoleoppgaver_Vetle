@@ -9,7 +9,11 @@ function AddEquipment(): JSX.Element {
 
     useEffect(() => {
         (async () => {
-            setAccess(await CheckAuthority(2));
+            try {
+                setAccess(await CheckAuthority(2));
+            } catch (err: any) {
+                console.error(err.message);
+            }
         })();
     }, []);
 
