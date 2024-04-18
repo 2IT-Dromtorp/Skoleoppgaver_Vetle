@@ -1,7 +1,7 @@
 function HomePage(): JSX.Element {
     return (
         <>
-            <p className="">Home page</p>
+            <p>Home page</p>
         </>
     );
 }

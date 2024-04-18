@@ -1,34 +1,37 @@
+import { Button } from "@/components/ui/Button";
 import axios from "axios";
-import { useEffect } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 function Layout(): JSX.Element {
-    const navigate = useNavigate();
-
-    axios.defaults.headers.common["Authorization"] = localStorage.getItem("jwt");
-
-    useEffect(() => {
-        if (localStorage.getItem("jwt") && location.pathname == "/login") navigate("/profile");
-        if (localStorage.getItem("jwt")) return
-        if (location.pathname == "/addStudent") navigate("/login");
-        if (location.pathname == "/addEquipment") navigate("/login");
-        if (location.pathname == "/equipment") navigate("/login");
-    })
+    axios.defaults.headers.common["Authorization"] =
+        localStorage.getItem("jwt");
 
     return (
-        <div className="relative min-h-screen">
-            <nav className="flex w-full justify-evenly bg-slate-700 py-3">
-                <Link to={"/"} className="bg-slate-400 py-4 px-10 rounded-sm">Home</Link>
-                <Link to={"/login"} className="bg-slate-400 py-4 px-10 rounded-sm">Log in</Link>
-                <Link to={"/equipment"} className="bg-slate-400 py-4 px-10 rounded-sm">Equipment</Link>
-                <Link to={"/addStudent"} className="bg-slate-400 py-4 px-10 rounded-sm">Add student</Link>
-                <Link to={"/addEquipment"} className="bg-slate-400 py-4 px-10 rounded-sm">Add equipment</Link>
-                <Link to={"/profile"} className="bg-slate-400 py-4 px-10 rounded-sm">Profile</Link>
+        <div className="bg-background relative min-h-screen">
+            <nav className="flex w-full justify-evenly bg-foreground py-3">
+                <Link to={"/"}>
+                    <Button>Home</Button>
+                </Link>
+                <Link to={"/login"}>
+                    <Button>Log in</Button>
+                </Link>
+                <Link to={"/equipment"}>
+                    <Button>Equipment</Button>
+                </Link>
+                <Link to={"/addStudent"}>
+                    <Button>Add student</Button>
+                </Link>
+                <Link to={"/addEquipment"}>
+                    <Button>Add equipment</Button>
+                </Link>
+                <Link to={"/profile"}>
+                    <Button>Profile</Button>
+                </Link>
             </nav>
             <div>
                 <Outlet />
             </div>
-            <footer className="absolute bottom-0 w-full justify-evenly bg-slate-700 py-3">
+            <footer className="absolute bottom-0 w-full justify-evenly bg-foreground py-3">
                 <p>Fin footer</p>
             </footer>
         </div>

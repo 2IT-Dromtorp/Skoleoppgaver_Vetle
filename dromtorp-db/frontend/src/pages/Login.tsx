@@ -1,51 +1,62 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/Button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/Form";
+import { Input } from "@/components/ui/Input";
+import { formSchema } from "../assets/Schemas";
 import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-function Login(): JSX.Element {
-    const navigate = useNavigate();
+function Login() {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {},
+    });
 
-    const [username, setUsername] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
-
-    function handleSubmit() {
-        axios
-            .post("/api/login", { username: username, password: password })
-            .then((res) => {
-                if (res.status != 200) throw new Error("NO!");
-                localStorage.setItem("jwt", res.data.jwt);
-                navigate("/profile");
-            }).catch();
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        await axios.post("/api/login", values);
     }
 
     return (
-        <>
-            <h1>Login</h1>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit();
-                }}
-            >
-                <label>
-                    <h2>Username</h2>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </label>
-                <label>
-                    <h2>Password</h2>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </label>
-                <input type="submit" />
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <FormField
+                    control={form.control}
+                    name="username"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Username</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Username" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Password</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit">Submit</Button>
             </form>
-        </>
+        </Form>
     );
 }
 
