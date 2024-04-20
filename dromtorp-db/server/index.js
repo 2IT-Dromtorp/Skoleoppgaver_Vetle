@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const PORT = process.env.PORT || 8080;
 
 async function getCollection(collection) {
-    const client = await MongoClient.connect("mongodb://localhost:27017");
+    const client = await MongoClient.connect("mongodb://127.0.0.1:27017");
     const db = client.db("dromtorp");
     return db.collection(collection);
 }
@@ -38,8 +38,8 @@ app.listen(PORT, () => {
             loginName: process.env.ADMIN_USERNAME,
             password: process.env.ADMIN_PASSWORD,
             salt: "",
-            authority: 5
-        })
+            authority: 5,
+        });
     })();
 
     app.get("/api/test", (req, res) => {
@@ -127,7 +127,8 @@ app.listen(PORT, () => {
             const collection = await getCollection("utstyr");
             await collection.insertOne({
                 name: req.body.name,
-                burrowed: false,
+                available: true,
+                burrowRequesters: [],
             });
             res.status(200).json({ message: "Equipment added" });
         } catch (err) {
@@ -144,12 +145,7 @@ app.listen(PORT, () => {
 
             const equipment = await collection.find({}).toArray();
 
-            console.log(equipment);
-
-            res.status(200).json({
-                message: "Successfully got equipment",
-                data: equipment,
-            });
+            res.status(200).json(equipment);
         } catch (err) {
             console.error(err);
             res.status(500).json({
@@ -158,9 +154,10 @@ app.listen(PORT, () => {
         }
     });
 
-    app.post("/api/burrowRequest", verifyToken, async (req, res) => {
+    app.put("/api/burrowRequest", verifyToken, async (req, res) => {
         try {
             const burrowRequests = await getCollection("requests");
+            const equipment = await getCollection("utstyr");
 
             const request = {
                 date: `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`,
@@ -177,11 +174,43 @@ app.listen(PORT, () => {
             };
 
             await burrowRequests.insertOne(request);
+
+            await equipment.updateOne(
+                { _id: new ObjectId(req.body.equipment) },
+                { $push: { burrowRequesters: req.userId } }
+            );
+
+            res.status(200).json({
+                message: "Succesfully added a burrow request",
+            });
         } catch (err) {
             console.error(err);
             res.status(500).json({
                 message: `Failed to add burrow request: ${err}`,
             });
+        }
+    });
+
+    app.get("/api/whoami", verifyToken, async (req, res) => {
+        try {
+            const users = await getCollection("users");
+
+            const user = await users.findOne(
+                { _id: new ObjectId(req.userId) },
+                { projection: { password: 0 } }
+            );
+
+            if (user == null) {
+                return res
+                    .status(401)
+                    .json({ message: "Could not authenticate user" });
+            }
+
+            return res.status(200).json(user);
+        } catch (err) {
+            return res
+                .status(500)
+                .json({ message: `Ann error occured: ${err}` });
         }
     });
 
