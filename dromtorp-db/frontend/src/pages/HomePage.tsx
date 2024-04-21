@@ -1,8 +1,10 @@
 function HomePage(): JSX.Element {
     return (
-        <>
-            <p>Home page</p>
-        </>
+        <div className="flex w-full justify-center">
+            <h1 className="text-5xl font-extrabold mt-8">
+                Dromtorp burrowing system
+            </h1>
+        </div>
     );
 }
 

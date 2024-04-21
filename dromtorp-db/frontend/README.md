@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# Dromtorp burrowing system
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Database-model
 
-Currently, two official plugins are available:
+### Database fields
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```
+dromtorp (database)
+ ┣ elever (collection)
+ ┃ ┣ address (json object)
+ ┃ ┃ ┣ city (the students home city)
+ ┃ ┃ ┣ street (the students home street)
+ ┃ ┃ ┗ zipcode (the students zip code)
+ ┃ ┣ birthdate (the students date of birth)
+ ┃ ┣ firstName (the students first name)
+ ┃ ┣ lastName (the students middle and last name)
+ ┃ ┣ mail (the students school email address)
+ ┃ ┣ phone (the students phone number)
+ ┃ ┣ relatives (array of json objects)
+ ┃ ┃ ┣ address (the relatives full address)
+ ┃ ┃ ┣ firstName (the relatives first name)
+ ┃ ┃ ┣ lastName (the relatives laast name)
+ ┃ ┃ ┣ mail (the relatives private email address)
+ ┃ ┃ ┗ phone (the relatives phone number)
+ ┃ ┣ username (the students username, same as loginName in "users" collection)
+ ┃ ┗ _id (the built MongoDb id)
+ ┃
+ ┣ requests (collection)
+ ┃ ┣ date (date of creation)
+ ┃ ┣ equipment (reference to "utstyr" collection)
+ ┃ ┣ student (reference to "elever" collection)
+ ┃ ┗ _id (the built MongoDb id)
+ ┃
+ ┣ users (collection)
+ ┃ ┣ loginName (the name the user uses to log in, the same as a students username)
+ ┃ ┣ password (the users password)
+ ┃ ┣ requirePasswordChange (if the user is required to change password)
+ ┃ ┣ roles (the users roles)
+ ┃ ┣ salt (the passwords salt)
+ ┃ ┗ _id (the built MongoDb id)
+ ┃
+ ┗ utstyr (collection)
+   ┣ available (if the equipment is availbale or not)
+   ┣ burrower (if the equipment is burrowed, a reference to "elever" collection)
+   ┣ burrowRequesters (an array of the id's of the students who wants to burrow the equipment)
+   ┣ name (the equipments name)
+   ┗ _id (the built MongoDb id)
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Database references
+
+dromtorp.requests.**equipment** -> dromtorp.**utstyr** \
+dromtorp.requests.**student** -> dromtorp.**elever** \
+dromtorp.utstyr.**burrower?** -> dromtorp.**elever**

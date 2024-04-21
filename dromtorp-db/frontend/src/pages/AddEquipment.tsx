@@ -1,31 +1,28 @@
-import { useEffect, useState } from "react";
-import CheckAuthority from "../assets/CheckAuthority";
+import { useState } from "react";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "@/assets/Types";
 
 function AddEquipment(): JSX.Element {
-    const [hasAccess, setAccess] = useState<boolean>(false);
+    const { data: user } = useQuery<User>({
+        queryKey: ["user"],
+    });
 
     const [name, setName] = useState<string>("");
-
-    useEffect(() => {
-        (async () => {
-            try {
-                setAccess(await CheckAuthority(2));
-            } catch (err: any) {
-                console.error(err.message);
-            }
-        })();
-    }, []);
 
     async function onSubmit() {
         console.log(name);
 
-        await axios.post("/api/addEquipment", {name: name})
+        await axios.post(
+            "/api/addEquipment",
+            { name: name },
+            { headers: { Authorization: localStorage.getItem("jwt") } }
+        );
     }
 
     return (
         <>
-            {hasAccess ? (
+            {["admin", "teacher"].some((str) => user?.roles.includes(str)) ? (
                 <>
                     <form
                         onSubmit={(e) => {
@@ -45,7 +42,7 @@ function AddEquipment(): JSX.Element {
                     </form>
                 </>
             ) : (
-                <p>no access</p>
+                <p>You do not have access to this page</p>
             )}
         </>
     );

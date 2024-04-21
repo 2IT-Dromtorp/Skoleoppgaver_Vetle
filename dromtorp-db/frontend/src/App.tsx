@@ -7,23 +7,39 @@ import AddEquipment from "./pages/AddEquipment";
 import Equipment from "./pages/Equipment";
 import Profile from "./pages/Profile";
 import ProtectedPath from "./pages/ProtectedPath";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import Requests from "./pages/Requests";
+import axios from "axios";
+
+export const queryClient = new QueryClient();
 
 function App() {
+    axios.defaults.headers.common["Authorization"] =
+        localStorage.getItem("jwt");
+
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<HomePage />} />
-                    <Route path="login" element={<Login />} />
-                    <Route element={<ProtectedPath />}>
-                        <Route path="profile" element={<Profile />} />
-                        <Route path="addStudent" element={<AddStudent />} />
-                        <Route path="addEquipment" element={<AddEquipment />} />
-                        <Route path="equipment" element={<Equipment />} />
+        <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools client={queryClient} />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<HomePage />} />
+                        <Route path="login" element={<Login />} />
+                        <Route element={<ProtectedPath />}>
+                            <Route path="profile" element={<Profile />} />
+                            <Route path="addStudent" element={<AddStudent />} />
+                            <Route
+                                path="addEquipment"
+                                element={<AddEquipment />}
+                            />
+                            <Route path="equipment" element={<Equipment />} />
+                            <Route path="requests" element={<Requests />} />
+                        </Route>
                     </Route>
-                </Route>
-            </Routes>
-        </BrowserRouter>
+                </Routes>
+            </BrowserRouter>
+        </QueryClientProvider>
     );
 }
 

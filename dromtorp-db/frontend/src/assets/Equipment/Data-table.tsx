@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/Alert-dialog";
 
 import { Button } from "@/components/ui/Button";
-import { PutRequest } from "@/hooks/UseApi";
+import { PutRequest, ReturnEquipment } from "@/hooks/UseApi";
 import { useState } from "react";
 import {
     Select,
@@ -58,6 +58,11 @@ export function DataTable() {
         pageSize: 10,
     });
 
+    async function handleReturn(id: string) {
+        await ReturnEquipment(id);
+        await refetch();
+    }
+
     const columnHelper = createColumnHelper<Equipment>();
     const columns = [
         columnHelper.accessor("_id", {
@@ -76,40 +81,69 @@ export function DataTable() {
             id: "actions",
             header: "Actions",
             cell: (info) => (
-                <AlertDialog>
-                    <AlertDialogTrigger
-                        asChild
-                        disabled={
-                            !info.row.original.available ||
-                            (user &&
-                                info.row.original.burrowRequesters.includes(
-                                    user._id
-                                ))
-                        }
-                    >
-                        <Button>Request</Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                A request for {info.row.original.name} will be
-                                sent for {user?.loginName}!
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={async () => {
-                                    await PutRequest(info.row.original._id);
-                                    await refetch();
-                                }}
+                <>
+                    {!user?.roles.includes("student") ? (
+                        <>
+                            {info.row.original.burrower && (
+                                <>
+                                    <p>
+                                        Equipment burrowed by{" "}
+                                        {info.row.original.burrower.firstName}{" "}
+                                        {info.row.original.burrower.lastName}
+                                    </p>
+                                    <Button
+                                        onClick={() =>
+                                            handleReturn(info.row.original._id)
+                                        }
+                                    >
+                                        Return
+                                    </Button>
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <AlertDialog>
+                            <AlertDialogTrigger
+                                asChild
+                                disabled={
+                                    !info.row.original.available ||
+                                    (user &&
+                                        info.row.original.burrowRequesters.includes(
+                                            user._id
+                                        ))
+                                }
                             >
-                                Request
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                                <Button>Request</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Are you sure?
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        A request for {info.row.original.name}{" "}
+                                        will be sent for {user?.loginName}!
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>
+                                        Cancel
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={async () => {
+                                            await PutRequest(
+                                                info.row.original._id
+                                            );
+                                            await refetch();
+                                        }}
+                                    >
+                                        Request
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    )}
+                </>
             ),
         }),
     ];
@@ -208,8 +242,8 @@ export function DataTable() {
                     <ChevronsRight />
                 </Button>
                 <Select
-                    onChange={(e: any) => {
-                        table.setPageSize(Number(e.target.value));
+                    onValueChange={(e: any) => {
+                        table.setPageSize(Number(e));
                     }}
                 >
                     <SelectTrigger className="w-20">
@@ -217,7 +251,10 @@ export function DataTable() {
                     </SelectTrigger>
                     <SelectContent>
                         {[10, 20, 30, 40, 50].map((pageSize) => (
-                            <SelectItem key={pageSize} value={pageSize}>
+                            <SelectItem
+                                key={pageSize}
+                                value={pageSize.toString()}
+                            >
                                 {pageSize}
                             </SelectItem>
                         ))}

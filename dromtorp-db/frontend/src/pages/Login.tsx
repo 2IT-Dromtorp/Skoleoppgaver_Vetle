@@ -27,10 +27,9 @@ import { PasswordInput } from "@/components/ui/PasswordInput";
 import { useQuery } from "@tanstack/react-query";
 import { AuthenticateUser } from "@/hooks/UseApi";
 import { Navigate } from "react-router-dom";
-import { ClipLoader } from "react-spinners";
 
 function Login() {
-    const { isPending, data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ["user"],
         queryFn: AuthenticateUser,
     });
@@ -44,17 +43,16 @@ function Login() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        axios.post("/api/login", values).then((res) => {
+        await axios.post("/api/login", values).then((res) => {
             localStorage.setItem("jwt", res.data.jwt);
         });
+        await refetch();
     }
 
     return (
         <div className="flex justify-center w-full h-fit">
-            {isPending ? (
-                <ClipLoader />
-            ) : data ? (
-                <Navigate to={"/profile"} />
+            {data ? (
+                <Navigate to={"/"} />
             ) : (
                 <Card>
                     <CardHeader>

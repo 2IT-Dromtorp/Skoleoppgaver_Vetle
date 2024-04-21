@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import CheckAuthority from "../assets/CheckAuthority";
+import { useState } from "react";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import { User } from "@/assets/Types";
 
 function AddStudent(): JSX.Element {
-    const [hasAccess, setAccess] = useState<boolean>(false);
-
+    const { data: user } = useQuery<User>({
+        queryKey: ["user"],
+    });
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [loginName, setLoginName] = useState<string>("");
@@ -30,16 +32,6 @@ function AddStudent(): JSX.Element {
             address: "",
         },
     ]);
-
-    useEffect(() => {
-        (async () => {
-            try {
-                setAccess(await CheckAuthority(2));
-            } catch (err: any) {
-                console.error(err.message);
-            }
-        })();
-    }, []);
 
     function changeRelatives(changedValue: {}, index: number) {
         const newRelative = { ...relatives[index], ...changedValue };
@@ -69,15 +61,24 @@ function AddStudent(): JSX.Element {
         const loginData = {
             loginName: loginName ? loginName : firstName + lastName,
             password: "Skole123",
-            authority: 0,
+            roles: ["student"],
+            requirePasswordChange: true,
         };
-        await axios.post("/api/addStudent", studentData).catch();
-        await axios.post("/api/addUser", loginData).catch();
+        await axios
+            .post("/api/addStudent", studentData, {
+                headers: { Authorization: localStorage.getItem("jwt") },
+            })
+            .catch();
+        await axios
+            .post("/api/addUser", loginData, {
+                headers: { Authorization: localStorage.getItem("jwt") },
+            })
+            .catch();
     }
 
     return (
         <>
-            {hasAccess ? (
+            {user?.roles.includes("admin") ? (
                 <>
                     <form
                         onSubmit={(e) => {
@@ -244,11 +245,11 @@ function AddStudent(): JSX.Element {
                                                             ) != index
                                                     ).length > 0
                                                         ? relatives.filter(
-                                                            (r) =>
-                                                                relatives.indexOf(
-                                                                    r
-                                                                ) != index
-                                                        )
+                                                              (r) =>
+                                                                  relatives.indexOf(
+                                                                      r
+                                                                  ) != index
+                                                          )
                                                         : []
                                                 );
                                             }}

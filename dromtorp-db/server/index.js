@@ -38,7 +38,7 @@ app.listen(PORT, () => {
             loginName: process.env.ADMIN_USERNAME,
             password: process.env.ADMIN_PASSWORD,
             salt: "",
-            authority: 5,
+            roles: ["admin"],
         });
     })();
 
@@ -77,39 +77,17 @@ app.listen(PORT, () => {
         }
     });
 
-    app.get("/api/checkAuthority", verifyToken, async (req, res) => {
-        const users = await getCollection("users");
-
-        const authority = await users.find({}).toArray();
-
-        console.log(authority);
-        console.log(req.query.requiredAuthority);
-
-        const result = authority
-            ? authority.authority == req.query.requiredAuthority
-                ? true
-                : false
-            : false;
-
-        res.status(200).json({ message: "👍", result: result });
-    });
-
     app.post("/api/addStudent", verifyToken, async (req, res) => {
-        console.log(req.body);
-
         try {
             const collection = await getCollection("elever");
             await collection.insertOne(req.body);
             res.status(200).json({ message: "Student added" });
         } catch (err) {
-            console.error(err);
             res.status(400).json({ message: `Failed to add student: ${err}` });
         }
     });
 
     app.post("/api/addUser", verifyToken, async (req, res) => {
-        console.log(req.body);
-
         try {
             const collection = await getCollection("users");
             await collection.insertOne({
@@ -117,7 +95,6 @@ app.listen(PORT, () => {
             });
             res.status(200).json({ message: "Student added" });
         } catch (err) {
-            console.error(err);
             res.status(500).json({ message: `Failed to add user: ${err}` });
         }
     });
@@ -142,10 +119,18 @@ app.listen(PORT, () => {
     app.get("/api/getAllEquipment", verifyToken, async (req, res) => {
         try {
             const collection = await getCollection("utstyr");
+            const students = await getCollection("elever");
 
-            const equipment = await collection.find({}).toArray();
+            const allEquipment = await collection.find({}).toArray();
 
-            res.status(200).json(equipment);
+            for (let i = 0; i < allEquipment.length; i++) {
+                if (!allEquipment[i].burrower) continue;
+                allEquipment[i].burrower = await students.findOne({
+                    _id: allEquipment[i].burrower.oid,
+                });
+            }
+
+            res.status(200).json(allEquipment);
         } catch (err) {
             console.error(err);
             res.status(500).json({
@@ -158,12 +143,26 @@ app.listen(PORT, () => {
         try {
             const burrowRequests = await getCollection("requests");
             const equipment = await getCollection("utstyr");
+            const users = await getCollection("users");
+            const students = await getCollection("elever");
+
+            const username = await users.findOne(
+                {
+                    _id: new ObjectId(req.userId),
+                },
+                { projection: { loginName: 1, _id: 0 } }
+            );
+
+            const student = await students.findOne(
+                { username: username.loginName },
+                { projection: { _id: 1 } }
+            );
 
             const request = {
                 date: `${new Date().getDate()}.${new Date().getMonth()}.${new Date().getFullYear()}`,
                 student: {
                     $ref: "elever",
-                    $id: new ObjectId(req.userId),
+                    $id: student._id,
                     $db: "dromtorp",
                 },
                 equipment: {
@@ -210,7 +209,129 @@ app.listen(PORT, () => {
         } catch (err) {
             return res
                 .status(500)
-                .json({ message: `Ann error occured: ${err}` });
+                .json({ message: `An error occured: ${err}` });
+        }
+    });
+
+    app.get("/api/student-data", verifyToken, async (req, res) => {
+        try {
+            const users = await getCollection("users");
+            const students = await getCollection("elever");
+
+            const username = await users.findOne(
+                {
+                    _id: new ObjectId(req.userId),
+                },
+                { projection: { loginName: 1, _id: 0 } }
+            );
+
+            if (username == null)
+                return res.status(401).json({ message: "Could not find user" });
+            const student = await students.findOne(
+                { username: username.loginName },
+                { projection: { _id: 0 } }
+            );
+
+            if (student == null)
+                return res
+                    .status(400)
+                    .json({ message: "Could not find student information" });
+
+            return res.status(200).json(student);
+        } catch (err) {
+            return res
+                .status(500)
+                .json({ message: `An error occured: ${err}` });
+        }
+    });
+
+    app.get("/api/requested-equipment", verifyToken, async (req, res) => {
+        try {
+            const requests = await getCollection("requests");
+            const students = await getCollection("elever");
+            const equipment = await getCollection("utstyr");
+
+            const allRequests = await requests.find({}).toArray();
+            for (let i = 0; i < allRequests.length; i++) {
+                allRequests[i].student = await students.findOne({
+                    _id: allRequests[i].student.oid,
+                });
+                allRequests[i].equipment = await equipment.findOne({
+                    _id: allRequests[i].equipment.oid,
+                });
+            }
+
+            return res.status(200).json(allRequests);
+        } catch (err) {
+            return res
+                .status(500)
+                .json({ message: `An error occured: ${err}` });
+        }
+    });
+
+    app.post("/api/answer-request", verifyToken, async (req, res) => {
+        try {
+            const requests = await getCollection("requests");
+            const equipmentCol = await getCollection("utstyr");
+
+            const request = await requests.findOne({
+                _id: new ObjectId(req.body.id),
+            });
+
+            await equipmentCol.updateOne(
+                { _id: request.equipment.oid },
+                { $set: { burrowRequesters: [] } }
+            );
+
+            if (req.body.result) {
+                await equipmentCol.updateOne(
+                    {
+                        _id: request.equipment.oid,
+                    },
+                    {
+                        $set: {
+                            available: false,
+                            burrower: {
+                                $ref: "elever",
+                                $id: new ObjectId(request.student.oid),
+                                $db: "dromtorp",
+                            },
+                        },
+                    }
+                );
+                await requests.deleteMany({ equipment: request.equipment });
+                return res
+                    .status(200)
+                    .json({ message: "Succesfully approved request" });
+            }
+            await requests.deleteOne({ _id: new ObjectId(req.body.id) });
+
+            return res
+                .status(200)
+                .json({ message: "Succesfully denied request" });
+        } catch (err) {
+            return res
+                .status(500)
+                .json({ message: `An error occured: ${err}` });
+        }
+    });
+
+    app.post("/api/return-equipment", verifyToken, async (req, res) => {
+        try {
+            const equipment = await getCollection("utstyr");
+
+            await equipment.updateOne(
+                { _id: new ObjectId(req.body.id) },
+                { $set: { available: true }, $unset: { burrower: "" } }
+            );
+
+            return res
+                .status(200)
+                .json({ message: "Succesfully returned equipment" });
+        } catch (err) {
+            return res
+                .status(500)
+                .json({ message: `An error occured: ${err}` });
         }
     });
 
