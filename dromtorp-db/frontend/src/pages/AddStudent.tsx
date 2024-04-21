@@ -61,6 +61,7 @@ function AddStudent(): JSX.Element {
         const loginData = {
             loginName: loginName ? loginName : firstName + lastName,
             password: "Skole123",
+            salt: "",
             roles: ["student"],
             requirePasswordChange: true,
         };
