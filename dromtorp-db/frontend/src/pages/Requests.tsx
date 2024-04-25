@@ -2,6 +2,7 @@ import { Request, User } from "@/assets/Types";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { AnswerRequest, GetRequests } from "@/hooks/UseApi";
+import { checkRoles } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -33,7 +34,7 @@ function Requests(): JSX.Element {
 
     return (
         <>
-            {["admin", "teacher"].some((str) => user?.roles.includes(str)) ? (
+            {checkRoles(["admin", "teacher"], user?.roles || []) ? (
                 <div className="flex flex-wrap justify-center w-full">
                     {requests.length > 0 ? (
                         requests.map((request: Request, index: number) => {

@@ -196,7 +196,7 @@ app.listen(PORT, () => {
 
             const user = await users.findOne(
                 { _id: new ObjectId(req.userId) },
-                { projection: { password: 0 } }
+                { projection: { password: 0, salt: 0 } }
             );
 
             if (user == null) {

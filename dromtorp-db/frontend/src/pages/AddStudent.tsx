@@ -2,11 +2,39 @@ import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@/assets/Types";
+import { checkRoles } from "@/lib/utils";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { addStudentSchema } from "@/assets/Schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Card } from "@/components/ui/Card";
 
 function AddStudent(): JSX.Element {
     const { data: user } = useQuery<User>({
         queryKey: ["user"],
     });
+
+    const form = useForm<z.infer<typeof addStudentSchema>>({
+        resolver: zodResolver(addStudentSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            loginName: "",
+            birthdate: "",
+            street: "",
+            city: "",
+            relatives: [
+                {
+                    firstName: "",
+                    lastName: "",
+                    mail: "",
+                    address: "",
+                },
+            ],
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof addStudentSchema>) {}
     const [firstName, setFirstName] = useState<string>("");
     const [lastName, setLastName] = useState<string>("");
     const [loginName, setLoginName] = useState<string>("");
@@ -45,7 +73,7 @@ function AddStudent(): JSX.Element {
         setRelatives(nextRelative);
     }
 
-    async function onSubmit() {
+    //async function onSubmit() {
         const studentData = {
             firstName: firstName,
             lastName: lastName,
@@ -79,8 +107,8 @@ function AddStudent(): JSX.Element {
 
     return (
         <>
-            {user?.roles.includes("admin") ? (
-                <>
+            {checkRoles(["admin", "teacher"], user?.roles || []) ? (
+                <Card>
                     <form
                         onSubmit={(e) => {
                             e.preventDefault();
@@ -281,7 +309,7 @@ function AddStudent(): JSX.Element {
                         </label>
                         <input type="submit" />
                     </form>
-                </>
+                </Card>
             ) : (
                 <p>You do not have access to this page</p>
             )}

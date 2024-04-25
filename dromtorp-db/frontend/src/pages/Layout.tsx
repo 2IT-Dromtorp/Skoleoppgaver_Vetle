@@ -1,6 +1,8 @@
 import { queryClient } from "@/App";
 import { User } from "@/assets/Types";
 import { Button } from "@/components/ui/Button";
+import { Toaster } from "@/components/ui/Sonner";
+import { checkRoles } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -34,15 +36,13 @@ function Layout(): JSX.Element {
                             <Button>Equipment</Button>
                         </Link>
                     )}
-                    {user && user.roles.includes("admin") && (
+                    {user && checkRoles(["admin"], user?.roles || []) && (
                         <Link to={"/addStudent"}>
                             <Button>Add student</Button>
                         </Link>
                     )}
 
-                    {["admin", "teacher"].some((str) =>
-                        user?.roles.includes(str)
-                    ) && (
+                    {checkRoles(["admin", "teacher"], user?.roles || []) && (
                         <>
                             <Link to={"/addEquipment"}>
                                 <Button>Add equipment</Button>
@@ -53,7 +53,7 @@ function Layout(): JSX.Element {
                         </>
                     )}
 
-                    {user?.roles.includes("student") && (
+                    {checkRoles(["student"], user?.roles || []) && (
                         <Link to={"/profile"}>
                             <Button>Profile</Button>
                         </Link>
@@ -73,6 +73,7 @@ function Layout(): JSX.Element {
                     <Outlet />
                 </div>
             </div>
+            <Toaster />
         </>
     );
 }

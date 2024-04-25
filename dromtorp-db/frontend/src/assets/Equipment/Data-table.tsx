@@ -44,6 +44,7 @@ import {
     ChevronsLeft,
     ChevronsRight,
 } from "lucide-react";
+import { checkRoles } from "@/lib/utils";
 
 export function DataTable() {
     const { data: user } = useQuery<User>({
@@ -82,7 +83,7 @@ export function DataTable() {
             header: "Actions",
             cell: (info) => (
                 <>
-                    {!user?.roles.includes("student") ? (
+                    {!checkRoles(["student"], user?.roles || []) ? (
                         <>
                             {info.row.original.burrower && (
                                 <>

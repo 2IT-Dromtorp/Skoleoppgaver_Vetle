@@ -1,14 +1,15 @@
 import { useState } from "react";
 import axios from "axios";
+import { checkRoles } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@/assets/Types";
 
 function AddEquipment(): JSX.Element {
+    const [name, setName] = useState<string>("");
+
     const { data: user } = useQuery<User>({
         queryKey: ["user"],
     });
-
-    const [name, setName] = useState<string>("");
 
     async function onSubmit() {
         console.log(name);
@@ -22,7 +23,7 @@ function AddEquipment(): JSX.Element {
 
     return (
         <>
-            {["admin", "teacher"].some((str) => user?.roles.includes(str)) ? (
+            {checkRoles(["admin", "teacher"], user?.roles || []) ? (
                 <>
                     <form
                         onSubmit={(e) => {

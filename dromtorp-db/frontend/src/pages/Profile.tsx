@@ -1,11 +1,18 @@
-import { Student } from "@/assets/Types";
+import { Student, User } from "@/assets/Types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { GetStudent } from "@/hooks/UseApi";
+import { checkRoles } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 
 function Profile(): JSX.Element {
     const [student, setStudent] = useState<Student>();
+
+    const { data: user } = useQuery<User>({
+        queryKey: ["user"],
+    });
 
     useEffect(() => {
         (async () => {
@@ -15,7 +22,9 @@ function Profile(): JSX.Element {
 
     return (
         <div className="flex justify-center items-center">
-            {!student ? (
+            {!checkRoles(["student"], user?.roles || []) ? (
+                <Navigate to={"/"} />
+            ) : !student ? (
                 <ClipLoader />
             ) : (
                 <Card>
