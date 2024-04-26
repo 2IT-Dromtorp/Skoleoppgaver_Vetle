@@ -6,6 +6,8 @@ app.use(express.json());
 const { MongoClient, ObjectId } = require("mongodb");
 const path = require("node:path");
 const jwt = require("jsonwebtoken");
+const crypto = require("node:crypto");
+const { sha512 } = require("./cryptography.js");
 
 const PORT = process.env.PORT || 8080;
 
@@ -34,10 +36,11 @@ app.listen(PORT, () => {
         const users = await getCollection("users");
         const allUsers = await users.find({}).toArray();
         if (allUsers.length > 0) return;
+        const salt = crypto.randomBytes(20).toString("hex");
         await users.insertOne({
             loginName: process.env.ADMIN_USERNAME,
-            password: process.env.ADMIN_PASSWORD,
-            salt: "",
+            password: sha512(process.env.ADMIN_PASSWORD + salt),
+            salt: salt,
             roles: ["admin"],
         });
     })();
@@ -59,7 +62,8 @@ app.listen(PORT, () => {
                     .json({ message: "Could not find a user" });
             }
 
-            const passwordMatch = password == user.password ? true : false;
+            const passwordMatch =
+                password == sha512(user.password + user.salt) ? true : false;
             if (!passwordMatch) {
                 return res.status(401).json({ message: "Wrong password" });
             }
@@ -90,8 +94,11 @@ app.listen(PORT, () => {
     app.post("/api/addUser", verifyToken, async (req, res) => {
         try {
             const collection = await getCollection("users");
+            const salt = crypto.randomBytes(20).toString("hex");
             await collection.insertOne({
-                ...req.body /*, password: Hash(req.body.password)*/,
+                ...req.body,
+                password: sha512(req.body.password + salt),
+                salt: salt,
             });
             res.status(200).json({ message: "Student added" });
         } catch (err) {

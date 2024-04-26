@@ -10,6 +10,7 @@ export type User = {
     _id: string;
     loginName: string;
     roles: string[];
+    requirePasswordChange: boolean;
 };
 
 export type Student = {
