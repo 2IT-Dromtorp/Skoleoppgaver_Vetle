@@ -1,5 +1,6 @@
 import { Equipment, Student, User, Request } from "@/assets/Types";
 import axios from "axios";
+import { toast } from "sonner";
 
 export async function AuthenticateUser(): Promise<User | null> {
     try {
@@ -19,7 +20,8 @@ export async function GetEquipment(): Promise<Equipment[]> {
         });
         return res.data;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -36,7 +38,8 @@ export async function PutRequest(equipmentId: string): Promise<string> {
         );
         return res.data.message;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -47,7 +50,8 @@ export async function GetStudent(): Promise<Student> {
         });
         return res.data;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }
 
@@ -58,36 +62,69 @@ export async function GetRequests(): Promise<Request[]> {
         });
         return res.data;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }
 
-export async function AnswerRequest(id: string, result: boolean) {
+export async function AnswerRequest(
+    id: string,
+    result: boolean
+): Promise<string> {
     try {
-        await axios.post(
+        const res = await axios.post(
             "/api/answer-request",
             { id, result },
             {
                 headers: { Authorization: localStorage.getItem("jwt") },
             }
         );
-        return;
+        return res.data.message;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }
 
-export async function ReturnEquipment(id: string) {
+export async function ReturnEquipment(id: string): Promise<string> {
     try {
-        await axios.post(
+        const res = await axios.post(
             "/api/return-equipment",
             { id },
             {
                 headers: { Authorization: localStorage.getItem("jwt") },
             }
         );
-        return;
+        return res.data.message;
     } catch (err: any) {
-        throw new Error(err.message);
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
+    }
+}
+
+export async function PostChangePassword(
+    oldPassword: string,
+    newPassword: string
+): Promise<string> {
+    try {
+        const res = await axios.post(
+            "/api/change-password",
+            { oldPassword, newPassword },
+            { headers: { Authorization: localStorage.getItem("jwt") } }
+        );
+        return res.data.message;
+    } catch (err: any) {
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
+    }
+}
+
+export async function PostAddEquipment(name: string): Promise<string> {
+    try {
+        const res = await axios.post("/api/addEquipment", { name });
+        return res.data.message;
+    } catch (err: any) {
+        toast.error(err.response.data.message);
+        throw new Error(err.response.data.message);
     }
 }

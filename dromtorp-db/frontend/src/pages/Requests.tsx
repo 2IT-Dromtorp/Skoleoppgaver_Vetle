@@ -5,6 +5,7 @@ import { AnswerRequest, GetRequests } from "@/hooks/UseApi";
 import { checkRoles } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 function Requests(): JSX.Element {
     const { data: user, refetch } = useQuery<User>({
@@ -21,13 +22,13 @@ function Requests(): JSX.Element {
     }, []);
 
     async function Deny(request: Request) {
-        await AnswerRequest(request._id, false);
+        toast(await AnswerRequest(request._id, false));
         await getRequests();
         await refetch();
     }
 
     async function Accept(request: Request) {
-        await AnswerRequest(request._id, true);
+        toast(await AnswerRequest(request._id, true));
         await getRequests();
         await refetch();
     }

@@ -42,6 +42,7 @@ app.listen(PORT, () => {
             password: sha512(process.env.ADMIN_PASSWORD + salt),
             salt: salt,
             roles: ["admin"],
+            requirePasswordChange: true,
         });
     })();
 
@@ -63,7 +64,7 @@ app.listen(PORT, () => {
             }
 
             const passwordMatch =
-                password == sha512(user.password + user.salt) ? true : false;
+                sha512(password + user.salt) == user.password ? true : false;
             if (!passwordMatch) {
                 return res.status(401).json({ message: "Wrong password" });
             }
@@ -97,10 +98,10 @@ app.listen(PORT, () => {
             const salt = crypto.randomBytes(20).toString("hex");
             await collection.insertOne({
                 ...req.body,
-                password: sha512(req.body.password + salt),
+                password: sha512("Skole123" + salt),
                 salt: salt,
             });
-            res.status(200).json({ message: "Student added" });
+            res.status(200).json({ message: "User added" });
         } catch (err) {
             res.status(500).json({ message: `Failed to add user: ${err}` });
         }
@@ -340,6 +341,38 @@ app.listen(PORT, () => {
                 .status(500)
                 .json({ message: `An error occured: ${err}` });
         }
+    });
+
+    app.post("/api/change-password", verifyToken, async (req, res) => {
+        if (req.body.oldPassword == req.body.newPassword)
+            return res
+                .status(400)
+                .json({ message: "Passwords cannot be the same" });
+        const users = await getCollection("users");
+
+        const salt = crypto.randomBytes(20).toString("hex");
+
+        const user = await users.findOne(
+            { _id: new ObjectId(req.userId) },
+            { projection: { password: 1, salt: 1 } }
+        );
+
+        if (user.password != sha512(req.body.oldPassword + user.salt))
+            return res
+                .status(401)
+                .json({ message: "Old password is incorrect" });
+
+        await users.updateOne(
+            { _id: new ObjectId(req.userId) },
+            {
+                $set: {
+                    requirePasswordChange: false,
+                    password: sha512(req.body.newPassword + salt),
+                    salt: salt,
+                },
+            }
+        );
+        res.status(200).json({ message: "Succesfully changed password" });
     });
 
     app.get("/*", (req, res) => {

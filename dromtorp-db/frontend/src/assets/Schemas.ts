@@ -33,3 +33,12 @@ export const changePasswordSchema = z
         newPassword: z.string(),
     })
     .refine((val) => val.newPassword != val.oldPassword);
+
+export const addEquipment = z.object({
+    name: z.string(),
+});
+
+export const addUserSchema = z.object({
+    loginName: z.string(),
+    roles: z.string(),
+});

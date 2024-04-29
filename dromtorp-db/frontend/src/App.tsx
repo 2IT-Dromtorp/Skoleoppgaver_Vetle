@@ -11,6 +11,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Requests from "./pages/Requests";
 import axios from "axios";
+import ChangePassword from "./pages/ChangePassword";
+import AddUser from "./pages/AddUser";
 
 export const queryClient = new QueryClient();
 
@@ -28,11 +30,16 @@ function App() {
                         <Route path="login" element={<Login />} />
                         <Route element={<ProtectedPath />}>
                             <Route path="profile" element={<Profile />} />
+                            <Route
+                                path="change-password"
+                                element={<ChangePassword />}
+                            />
                             <Route path="addStudent" element={<AddStudent />} />
                             <Route
                                 path="addEquipment"
                                 element={<AddEquipment />}
                             />
+                            <Route path="add-user" element={<AddUser />} />
                             <Route path="equipment" element={<Equipment />} />
                             <Route path="requests" element={<Requests />} />
                         </Route>

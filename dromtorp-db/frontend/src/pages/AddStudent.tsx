@@ -12,11 +12,13 @@ import {
     FormField,
     FormItem,
     FormLabel,
+    FormMessage,
 } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Plus, X } from "lucide-react";
 import axios from "axios";
+import { toast } from "sonner";
 
 function AddStudent(): JSX.Element {
     const { data: user } = useQuery<User>({
@@ -49,8 +51,6 @@ function AddStudent(): JSX.Element {
     });
 
     async function onSubmit(values: z.infer<typeof addStudentSchema>) {
-        console.log(values);
-
         const studentData = {
             firstName: values.firstName,
             lastName: values.lastName,
@@ -60,12 +60,12 @@ function AddStudent(): JSX.Element {
             mail: values.loginName
                 ? values.loginName + "@viken.no"
                 : values.firstName + values.lastName + "@viken.no",
-            phone: values.phone,
+            phone: Number.parseInt(values.phone),
             relatives: values.relatives,
             birthdate: values.birthdate,
             address: {
                 street: values.street,
-                zipcode: values.zipcode,
+                zipcode: Number.parseInt(values.zipcode),
                 city: values.city,
             },
         };
@@ -73,7 +73,6 @@ function AddStudent(): JSX.Element {
             loginName: values.loginName
                 ? values.loginName
                 : values.firstName + values.lastName,
-            password: "Skole123",
             roles: ["student"],
             requirePasswordChange: true,
         };
@@ -81,57 +80,23 @@ function AddStudent(): JSX.Element {
             .post("/api/addStudent", studentData, {
                 headers: { Authorization: localStorage.getItem("jwt") },
             })
-            .catch();
+            .then((res) => {
+                toast(res.data.message);
+            })
+            .catch((err: any) => {
+                toast.error(err.response.data.message);
+            });
         await axios
             .post("/api/addUser", loginData, {
                 headers: { Authorization: localStorage.getItem("jwt") },
             })
-            .catch();
+            .then((res) => {
+                toast(res.data.message);
+            })
+            .catch((err: any) => {
+                toast.error(err.response.data.message);
+            });
     }
-
-    // function changeRelatives(changedValue: {}, index: number) {
-    //     const newRelative = { ...relatives[index], ...changedValue };
-    //     const nextRelative = relatives.map((relative, i) => {
-    //         if (index == i) {
-    //             return newRelative;
-    //         } else {
-    //             return relative;
-    //         }
-    //     });
-    //     setRelatives(nextRelative);
-    // }
-
-    // async function onSubmit() {
-    //     const studentData = {
-    //         firstName: firstName,
-    //         lastName: lastName,
-    //         username: loginName ? loginName : firstName + lastName,
-    //         mail: loginName
-    //             ? loginName + "@viken.no"
-    //             : firstName + lastName + "@viken.no",
-    //         phone: phone,
-    //         relatives: relatives,
-    //         birthdate: birthdate,
-    //         address: { street: street, zipcode: zipcode, city: city },
-    //     };
-    //     const loginData = {
-    //         loginName: loginName ? loginName : firstName + lastName,
-    //         password: "Skole123",
-    //         salt: "",
-    //         roles: ["student"],
-    //         requirePasswordChange: true,
-    //     };
-    //     await axios
-    //         .post("/api/addStudent", studentData, {
-    //             headers: { Authorization: localStorage.getItem("jwt") },
-    //         })
-    //         .catch();
-    //     await axios
-    //         .post("/api/addUser", loginData, {
-    //             headers: { Authorization: localStorage.getItem("jwt") },
-    //         })
-    //         .catch();
-    // }
 
     return (
         <>
@@ -156,6 +121,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -171,6 +137,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -186,6 +153,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -202,6 +170,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -217,6 +186,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -232,6 +202,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -248,6 +219,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -263,6 +235,7 @@ function AddStudent(): JSX.Element {
                                                     {...field}
                                                 />
                                             </FormControl>
+                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 />
@@ -286,6 +259,7 @@ function AddStudent(): JSX.Element {
                                                                 {...field}
                                                             />
                                                         </FormControl>
+                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
@@ -303,6 +277,7 @@ function AddStudent(): JSX.Element {
                                                                 {...field}
                                                             />
                                                         </FormControl>
+                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
@@ -320,6 +295,7 @@ function AddStudent(): JSX.Element {
                                                                 {...field}
                                                             />
                                                         </FormControl>
+                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
@@ -338,6 +314,7 @@ function AddStudent(): JSX.Element {
                                                                 {...field}
                                                             />
                                                         </FormControl>
+                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />
@@ -355,6 +332,7 @@ function AddStudent(): JSX.Element {
                                                                 {...field}
                                                             />
                                                         </FormControl>
+                                                        <FormMessage />
                                                     </FormItem>
                                                 )}
                                             />

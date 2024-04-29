@@ -45,6 +45,7 @@ import {
     ChevronsRight,
 } from "lucide-react";
 import { checkRoles } from "@/lib/utils";
+import { toast } from "sonner";
 
 export function DataTable() {
     const { data: user } = useQuery<User>({
@@ -60,8 +61,10 @@ export function DataTable() {
     });
 
     async function handleReturn(id: string) {
-        await ReturnEquipment(id);
-        await refetch();
+        try {
+            toast(await ReturnEquipment(id));
+            await refetch();
+        } catch (err: any) {}
     }
 
     const columnHelper = createColumnHelper<Equipment>();
@@ -76,7 +79,19 @@ export function DataTable() {
         }),
         columnHelper.accessor("available", {
             header: "Available",
-            cell: (info) => info.getValue().toString(),
+            cell: (info) => (
+                <>
+                    {info.getValue() ? (
+                        <p>Available</p>
+                    ) : (
+                        <p>
+                            Equipment burrowed by{" "}
+                            {info.row.original.burrower?.firstName}{" "}
+                            {info.row.original.burrower?.lastName}
+                        </p>
+                    )}
+                </>
+            ),
         }),
         columnHelper.display({
             id: "actions",
@@ -87,11 +102,6 @@ export function DataTable() {
                         <>
                             {info.row.original.burrower && (
                                 <>
-                                    <p>
-                                        Equipment burrowed by{" "}
-                                        {info.row.original.burrower.firstName}{" "}
-                                        {info.row.original.burrower.lastName}
-                                    </p>
                                     <Button
                                         onClick={() =>
                                             handleReturn(info.row.original._id)
@@ -122,8 +132,9 @@ export function DataTable() {
                                         Are you sure?
                                     </AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        A request for {info.row.original.name}{" "}
-                                        will be sent for {user?.loginName}!
+                                        A request for equipment{" "}
+                                        {info.row.original.name} will be sent
+                                        for user {user?.loginName}!
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
