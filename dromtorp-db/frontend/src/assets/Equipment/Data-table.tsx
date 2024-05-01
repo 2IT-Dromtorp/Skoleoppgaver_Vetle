@@ -119,7 +119,7 @@ export function DataTable() {
                                 disabled={
                                     !info.row.original.available ||
                                     (user &&
-                                        info.row.original.borrowRequesters.includes(
+                                        info.row.original.borrowRequesters?.includes(
                                             user._id
                                         ))
                                 }

@@ -11,7 +11,7 @@ function Equipment(): JSX.Element {
 
     return (
         <div className="flex w-full flex-col items-center justify-center">
-            {isPending ? <ClipLoader /> : data && <EquipmentTable />}
+            {isPending || !data ? <ClipLoader /> : <EquipmentTable />}
         </div>
     );
 }

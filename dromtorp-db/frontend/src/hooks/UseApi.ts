@@ -121,7 +121,11 @@ export async function PostChangePassword(
 
 export async function PostAddEquipment(name: string): Promise<string> {
     try {
-        const res = await axios.post("/api/addEquipment", { name });
+        const res = await axios.post(
+            "/api/addEquipment",
+            { name },
+            { headers: { Authorization: localStorage.getItem("jwt") } }
+        );
         return res.data.message;
     } catch (err: any) {
         toast.error(err.response.data.message);

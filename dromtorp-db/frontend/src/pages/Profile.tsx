@@ -53,7 +53,7 @@ function Profile(): JSX.Element {
                                     </p>
                                     <p>Mail: {relative.mail}</p>
                                     <p>Phone: {relative.phone.toString()}</p>
-                                    <p>Address: {relative.phone}</p>
+                                    <p>Address: {relative.address}</p>
                                 </div>
                             );
                         })}
