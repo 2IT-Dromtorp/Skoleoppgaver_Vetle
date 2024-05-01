@@ -12,12 +12,13 @@ export default defineConfig({
     server: {
         proxy: {
             "/api": {
-                target: "http://localhost:8080/",
+                target: "http://192.168.10.20:8080/",
                 changeOrigin: true,
             },
         },
     },
     build: {
         outDir: "../server/dist",
+        emptyOutDir: true,
     },
 });

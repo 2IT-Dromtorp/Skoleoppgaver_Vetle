@@ -1,4 +1,4 @@
-# Dromtorp burrowing system
+# Dromtorp borrowing system
 
 ## Database-model
 
@@ -41,8 +41,8 @@ dromtorp (database)
  ┃
  ┗ utstyr (collection)
    ┣ available (if the equipment is availbale or not)
-   ┣ burrower (if the equipment is burrowed, a reference to "elever" collection)
-   ┣ burrowRequesters (an array of the id's of the students who wants to burrow the equipment)
+   ┣ borrower (if the equipment is borrowed, a reference to "elever" collection)
+   ┣ borrowRequesters (an array of the id's of the students who wants to borrow the equipment)
    ┣ name (the equipments name)
    ┗ _id (the built MongoDb id)
 ```
@@ -51,4 +51,4 @@ dromtorp (database)
 
 dromtorp.requests.**equipment** -> dromtorp.**utstyr** \
 dromtorp.requests.**student** -> dromtorp.**elever** \
-dromtorp.utstyr.**burrower?** -> dromtorp.**elever**
+dromtorp.utstyr.**borrower?** -> dromtorp.**elever**

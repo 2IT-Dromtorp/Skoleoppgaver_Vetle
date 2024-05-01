@@ -85,9 +85,9 @@ export function DataTable() {
                         <p>Available</p>
                     ) : (
                         <p>
-                            Equipment burrowed by{" "}
-                            {info.row.original.burrower?.firstName}{" "}
-                            {info.row.original.burrower?.lastName}
+                            Equipment borrowed by{" "}
+                            {info.row.original.borrower?.firstName}{" "}
+                            {info.row.original.borrower?.lastName}
                         </p>
                     )}
                 </>
@@ -100,7 +100,7 @@ export function DataTable() {
                 <>
                     {!checkRoles(["student"], user?.roles || []) ? (
                         <>
-                            {info.row.original.burrower && (
+                            {info.row.original.borrower && (
                                 <>
                                     <Button
                                         onClick={() =>
@@ -119,7 +119,7 @@ export function DataTable() {
                                 disabled={
                                     !info.row.original.available ||
                                     (user &&
-                                        info.row.original.burrowRequesters.includes(
+                                        info.row.original.borrowRequesters.includes(
                                             user._id
                                         ))
                                 }

@@ -2,8 +2,8 @@ export type Equipment = {
     _id: string;
     name: string;
     available: boolean;
-    burrowRequesters: string[];
-    burrower?: Student;
+    borrowRequesters: string[];
+    borrower?: Student;
 };
 
 export type User = {

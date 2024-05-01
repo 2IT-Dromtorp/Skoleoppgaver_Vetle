@@ -12,7 +12,7 @@ const { sha512 } = require("./cryptography.js");
 const PORT = process.env.PORT || 8080;
 
 async function getCollection(collection) {
-    const client = await MongoClient.connect("mongodb://127.0.0.1:27017");
+    const client = await MongoClient.connect(process.env.MONGO_URL);
     const db = client.db("dromtorp");
     return db.collection(collection);
 }
@@ -113,7 +113,7 @@ app.listen(PORT, () => {
             await collection.insertOne({
                 name: req.body.name,
                 available: true,
-                burrowRequesters: [],
+                borrowRequesters: [],
             });
             res.status(200).json({ message: "Equipment added" });
         } catch (err) {
@@ -132,9 +132,9 @@ app.listen(PORT, () => {
             const allEquipment = await collection.find({}).toArray();
 
             for (let i = 0; i < allEquipment.length; i++) {
-                if (!allEquipment[i].burrower) continue;
-                allEquipment[i].burrower = await students.findOne({
-                    _id: allEquipment[i].burrower.oid,
+                if (!allEquipment[i].borrower) continue;
+                allEquipment[i].borrower = await students.findOne({
+                    _id: allEquipment[i].borrower.oid,
                 });
             }
 
@@ -147,9 +147,9 @@ app.listen(PORT, () => {
         }
     });
 
-    app.put("/api/burrowRequest", verifyToken, async (req, res) => {
+    app.put("/api/borrowRequest", verifyToken, async (req, res) => {
         try {
-            const burrowRequests = await getCollection("requests");
+            const borrowRequests = await getCollection("requests");
             const equipment = await getCollection("utstyr");
             const users = await getCollection("users");
             const students = await getCollection("elever");
@@ -180,20 +180,20 @@ app.listen(PORT, () => {
                 },
             };
 
-            await burrowRequests.insertOne(request);
+            await borrowRequests.insertOne(request);
 
             await equipment.updateOne(
                 { _id: new ObjectId(req.body.equipment) },
-                { $push: { burrowRequesters: req.userId } }
+                { $push: { borrowRequesters: req.userId } }
             );
 
             res.status(200).json({
-                message: "Succesfully added a burrow request",
+                message: "Succesfully added a borrow request",
             });
         } catch (err) {
             console.error(err);
             res.status(500).json({
-                message: `Failed to add burrow request: ${err}`,
+                message: `Failed to add borrow request: ${err}`,
             });
         }
     });
@@ -288,7 +288,7 @@ app.listen(PORT, () => {
 
             await equipmentCol.updateOne(
                 { _id: request.equipment.oid },
-                { $set: { burrowRequesters: [] } }
+                { $set: { borrowRequesters: [] } }
             );
 
             if (req.body.result) {
@@ -299,7 +299,7 @@ app.listen(PORT, () => {
                     {
                         $set: {
                             available: false,
-                            burrower: {
+                            borrower: {
                                 $ref: "elever",
                                 $id: new ObjectId(request.student.oid),
                                 $db: "dromtorp",
@@ -330,7 +330,7 @@ app.listen(PORT, () => {
 
             await equipment.updateOne(
                 { _id: new ObjectId(req.body.id) },
-                { $set: { available: true }, $unset: { burrower: "" } }
+                { $set: { available: true }, $unset: { borrower: "" } }
             );
 
             return res

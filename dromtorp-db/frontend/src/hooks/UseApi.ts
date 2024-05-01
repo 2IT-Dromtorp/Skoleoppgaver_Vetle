@@ -28,7 +28,7 @@ export async function GetEquipment(): Promise<Equipment[]> {
 export async function PutRequest(equipmentId: string): Promise<string> {
     try {
         const res = await axios.put(
-            "/api/burrowRequest",
+            "/api/borrowRequest",
             {
                 equipment: equipmentId,
             },
