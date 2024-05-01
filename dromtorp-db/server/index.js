@@ -46,8 +46,8 @@ app.listen(PORT, () => {
         });
     })();
 
-    app.get("/api/test", (req, res) => {
-        res.status(200).json({ message: "👍" });
+    app.get("/api/health", (req, res) => {
+        res.status(200).send("Server running as expected");
     });
 
     app.post("/api/login", async (req, res) => {
