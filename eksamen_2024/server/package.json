@@ -1,0 +1,18 @@
+{
+    "name": "ballil",
+    "version": "1.0.0",
+    "description": "Ball IL sin nettside",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon --env-file=.env index.js",
+        "server": "node --env-file=.env index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Vetle",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.19.2",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.7.0"
+    }
+}
