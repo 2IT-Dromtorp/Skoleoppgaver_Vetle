@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --text: 26 92% 5%;
+        --background: 30 90% 96%;
+        --primary: 29 93% 55%;
+        --secondary: 124 92% 74%;
+        --accent: 155 93% 63%;
+    }
+    .dark {
+        --text: 26 92% 95%;
+        --background: 30 90% 4%;
+        --primary: 29 93% 45%;
+        --secondary: 124 92% 26%;
+        --accent: 155 93% 37%;
+    }
+}
+
+button {
+    @apply bg-secondary shadow duration-200 hover:brightness-[.85] rounded-lg;
+}

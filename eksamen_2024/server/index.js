@@ -2,12 +2,21 @@ const express = require("express");
 const path = require("node:path");
 const crypto = require("node:crypto");
 const { MongoClient } = require("mongodb");
+const { check, validationResult } = require("express-validator");
 
 const app = express();
 app.use(express.static(path.resolve("./build")));
 app.use(express.json());
 
 const PORT = process.env.PORT || 8080;
+const adminUsername = process.env.ADMIN_USERNAME;
+const adminPassword = process.env.ADMIN_PASSWORD;
+
+if (!adminUsername || !adminPassword) {
+    console.error("Missing env variables ADMIN_USERNAME and/or ADMIN_PASSWORD");
+    process.exit(1);
+}
+
 app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
 
@@ -23,7 +32,6 @@ app.listen(PORT, async () => {
     app.get("/api/login", (req, res) => {
         const username = req.query.username;
         const password = req.query.password;
-
         const user = users.findOne({ username, password: crypto.createHash("sha256").update(password).digest("hex") });
         if (!user) return res.status(401).send("Invalid username or password");
         return res.status(200).send("Login successful");
@@ -36,6 +44,7 @@ app.listen(PORT, async () => {
 
     app.get("/api/tournaments", async (req, res) => {
         const allTournaments = await tournaments.find({}).toArray();
+        allTournaments = allTournaments.sort((a) => a.members);
         return res.status(200).json(allTournaments);
     });
 
@@ -82,12 +91,12 @@ app.listen(PORT, async () => {
     async function insertDefaultUserIfNotExists(users) {
         await users.updateOne(
             {
-                username: process.env.USERNAME,
+                username: adminUsername,
             },
             {
                 $setOnInsert: {
-                    username: process.env.USERNAME,
-                    password: crypto.createHash("sha256").update(process.env.PASSWORD).digest("hex"),
+                    username: adminUsername,
+                    password: crypto.createHash("sha256").update(adminPassword).digest("hex"),
                 },
             },
             {
