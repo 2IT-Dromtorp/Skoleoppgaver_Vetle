@@ -7,10 +7,13 @@ export type sport = {
 
 export type tournament = {
     _id: string;
-    name: string;
-    description: string;
     sport: string;
-    participants: number;
+    name: string;
+    date: string;
+    time: string;
+    place: string;
+    skillLevel: string;
+    description: string;
 };
 
 export type request = {
