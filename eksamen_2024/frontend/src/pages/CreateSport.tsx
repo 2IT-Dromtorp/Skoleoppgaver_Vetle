@@ -10,7 +10,11 @@ function CreateSport(): JSX.Element {
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         try {
-            const res = await axios.post("/api/sport", { name: sport, description });
+            const res = await axios.post(
+                "/api/sport",
+                { name: sport, description },
+                { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+            );
             if (res.status === 201) {
                 setMessage("Sporten ble opprettet");
             } else {
