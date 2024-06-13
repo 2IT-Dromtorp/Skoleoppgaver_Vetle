@@ -15,9 +15,12 @@ const adminUsername = process.env.ADMIN_USERNAME;
 const adminPassword = process.env.ADMIN_PASSWORD;
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const googleToken = process.env.GOOGLE_TOKEN;
+const mongoUrl = process.env.MONGO_URL;
 
-if (!adminUsername || !adminPassword || !accessTokenSecret || !googleToken) {
-    console.error("Missing env variables ADMIN_USERNAME and/or ADMIN_PASSWORD and/or ACCESS_TOKEN_SECRET and/or GOOGLE_TOKEN");
+if (!adminUsername || !adminPassword || !accessTokenSecret || !googleToken || !mongoUrl) {
+    console.error(
+        "Missing env variables ADMIN_USERNAME and/or ADMIN_PASSWORD and/or ACCESS_TOKEN_SECRET and/or GOOGLE_TOKEN and/or MONGO_URL"
+    );
     process.exit(1);
 }
 
@@ -35,14 +38,14 @@ const transporter = nodemailer.createTransport({
 app.listen(PORT, async () => {
     console.log(`Server is running on port ${PORT}`);
 
-    const client = await MongoClient.connect("mongodb://localhost:27017");
+    const client = new MongoClient(mongoUrl);
     const db = client.db("eksamen");
     const users = db.collection("users");
     const sports = db.collection("sports");
     const tournaments = db.collection("tournaments");
     const requests = db.collection("requests");
 
-    await insertDefaultUserIfNotExists(users);
+    insertDefaultUserIfNotExists(users);
 
     app.post(
         "/api/login",
@@ -220,7 +223,7 @@ app.listen(PORT, async () => {
         }
     );
 
-    app.get("/*", (req, res) => {
+    app.get("*", (req, res) => {
         res.sendFile(path.resolve("./build/index.html"));
     });
 
