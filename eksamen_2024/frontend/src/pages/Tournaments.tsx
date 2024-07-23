@@ -21,7 +21,7 @@ function Tournaments(): JSX.Element {
                 const authRes = await axios.get("/api/check-auth", {
                     headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
-                if (authRes.data) {
+                if (authRes.data.isAdmin) {
                     setIsAdmin(true);
                 }
             } catch (err) {

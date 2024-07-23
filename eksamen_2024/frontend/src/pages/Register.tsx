@@ -1,9 +1,9 @@
-import { useState } from "react";
-import Input from "../assets/components/Input";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Input from "../assets/components/Input";
 
-function Login(): JSX.Element {
+function Register(): JSX.Element {
     const navigate = useNavigate();
 
     const [message, setMessage] = useState<string>("");
@@ -13,17 +13,18 @@ function Login(): JSX.Element {
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
         try {
-            const res = await axios.post("/api/login", { username, password });
+            const res = await axios.post("/api/register", { username, password });
             if (res.status === 200) {
                 localStorage.setItem("token", res.data);
                 navigate("/");
                 window.location.reload();
             } else {
-                setMessage("Feil brukernavn eller passord");
+                setMessage("Noe gikk galt");
             }
-        } catch (err) {
-            setMessage("Feil brukernavn eller passord");
+        } catch (err: any) {
+            setMessage(err.response.data);
         } finally {
             setUsername("");
             setPassword("");
@@ -33,7 +34,7 @@ function Login(): JSX.Element {
     return (
         <div className="flex flex-col text-center justify-center">
             <form onSubmit={onSubmit} className="flex flex-col self-center mb-8 space-y-4 w-1/6">
-                <h1 className="font-bold text-4xl">Logg inn</h1>
+                <h1 className="font-bold text-4xl">Opprett ny bruker</h1>
                 <Input
                     label="Navn"
                     value={username}
@@ -49,13 +50,10 @@ function Login(): JSX.Element {
                     placeholder="Passord"
                 />
                 <p>{message}</p>
-                <button className="p-2">Logg inn</button>
+                <button className="p-2">Opprett</button>
             </form>
-            <Link to={"/register"}>
-                <button className="p-2">Registrer en ny bruker</button>
-            </Link>
         </div>
     );
 }
 
-export default Login;
+export default Register;

@@ -5,6 +5,7 @@ const { MongoClient, ObjectId } = require("mongodb");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { setupFileWatcher } = require("./filewatcher");
 
 const app = express();
 app.use(express.static(path.resolve("./build")));
@@ -45,7 +46,8 @@ app.listen(PORT, async () => {
     const tournaments = db.collection("tournaments");
     const requests = db.collection("requests");
 
-    insertDefaultUserIfNotExists(users);
+    insertUserIfNotExists(users, adminUsername, adminPassword, true);
+    setupFileWatcher(users, sports, "./new_players");
 
     app.post(
         "/api/login",
@@ -99,8 +101,31 @@ app.listen(PORT, async () => {
         }
     );
 
+    app.post(
+        "/api/register",
+        [
+            check("username").notEmpty().withMessage("Username is required"),
+            check("password").notEmpty().withMessage("Password is required"),
+        ],
+        async (req, res) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
+            const { username, password } = req.body;
+            const result = await insertUserIfNotExists(users, username, password, false);
+            if (result.upsertedCount == 0) return res.status(409).send("The user already exists");
+
+            const user = await users.findOne({ username, password: crypto.createHash("sha256").update(password).digest("hex") });
+
+            const accessToken = jwt.sign(user, accessTokenSecret);
+            return res.status(200).json(accessToken);
+        }
+    );
+
     app.get("/api/check-auth", [authenticateToken], (req, res) => {
-        return res.status(200).send(true);
+        return res.status(200).send(req.user);
     });
 
     app.get("/api/sports", async (req, res) => {
@@ -133,7 +158,7 @@ app.listen(PORT, async () => {
             }
 
             const { name, description } = req.body;
-            await sports.insertOne({ name, description, members: 0 });
+            await sports.insertOne({ name: name.toLowerCase(), description, members: 0 });
             return res.status(201).send("Sport created");
         }
     );
@@ -166,6 +191,7 @@ app.listen(PORT, async () => {
         [
             check("sport").notEmpty().withMessage("Sport is required"),
             check("name").notEmpty().withMessage("Name is required"),
+            check("phone").notEmpty().withMessage("Phone is required"),
             check("email").notEmpty().withMessage("Email is required").isEmail().withMessage("Invalid email format"),
         ],
         async (req, res) => {
@@ -174,8 +200,8 @@ app.listen(PORT, async () => {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const { sport, name, email } = req.body;
-            await requests.updateOne({ sport, name, email }, { $setOnInsert: { sport, name, email } }, { upsert: true });
+            const { sport, name, email, phone } = req.body;
+            await requests.updateOne({ sport, name }, { $set: { sport, name, email, phone } }, { upsert: true });
             return res.status(201).send("Request sent");
         }
     );
@@ -191,9 +217,10 @@ app.listen(PORT, async () => {
 
             const { id } = req.body;
             const request = await requests.findOneAndDelete({ _id: new ObjectId(id) });
-            await sports.updateOne({ _id: new ObjectId(request._id) }, { $inc: { members: 1 } });
+            await users.updateOne({ username: request.name }, { $push: { activeSports: request.sport } });
+            await sports.updateOne({ name: request.sport }, { $inc: { members: 1 } });
             await transporter.sendMail({
-                from: "ballil@noreply.com",
+                from: "vetle.fongen@gmail.com",
                 to: request.email,
                 subject: "Request accepted",
                 text: `Your request to join ${request.sport} has been accepted`,
@@ -214,7 +241,7 @@ app.listen(PORT, async () => {
             const { id } = req.body;
             const request = await requests.findOneAndDelete({ _id: new ObjectId(id) });
             await transporter.sendMail({
-                from: "ballil@noreply.com",
+                from: "vetle.fongen@gmail.com",
                 to: request.email,
                 subject: "Request declined",
                 text: `Your request to join ${request.sport} has been declined`,
@@ -239,15 +266,17 @@ app.listen(PORT, async () => {
         });
     }
 
-    async function insertDefaultUserIfNotExists(users) {
-        await users.updateOne(
+    async function insertUserIfNotExists(users, username, password, isAdmin) {
+        return await users.updateOne(
             {
-                username: adminUsername,
+                username: username,
             },
             {
                 $setOnInsert: {
-                    username: adminUsername,
-                    password: crypto.createHash("sha256").update(adminPassword).digest("hex"),
+                    username: username,
+                    password: crypto.createHash("sha256").update(password).digest("hex"),
+                    isAdmin: isAdmin,
+                    activeSports: [],
                 },
             },
             {

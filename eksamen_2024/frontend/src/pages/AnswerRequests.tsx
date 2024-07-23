@@ -23,7 +23,7 @@ function AnswerRequests(): JSX.Element {
                 console.error(err);
             }
         })();
-    });
+    }, []);
 
     async function acceptRequest(id: string) {
         try {
@@ -33,6 +33,10 @@ function AnswerRequests(): JSX.Element {
                 { headers: { authorization: `Bearer ${localStorage.getItem("token")}` } }
             );
             setMessage("Forespørsel godkjent");
+            const requestsRes = await axios.get("/api/requests", {
+                headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
+            setAllRequests(requestsRes.data);
         } catch (err) {
             setMessage("Noe gikk galt");
         }
@@ -45,6 +49,10 @@ function AnswerRequests(): JSX.Element {
                 { headers: { authorization: `Bearer ${localStorage.getItem("token")}` } }
             );
             setMessage("Forespørsel avslått");
+            const requestsRes = await axios.get("/api/requests", {
+                headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
+            });
+            setAllRequests(requestsRes.data);
         } catch (err) {
             setMessage("Noe gikk galt");
         }

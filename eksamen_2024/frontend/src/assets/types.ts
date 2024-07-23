@@ -22,3 +22,11 @@ export type request = {
     name: string;
     email: string;
 };
+
+export type TUser = {
+    _id: string;
+    username: string;
+    password: string;
+    isAdmin: string;
+    activeSports: string[];
+};

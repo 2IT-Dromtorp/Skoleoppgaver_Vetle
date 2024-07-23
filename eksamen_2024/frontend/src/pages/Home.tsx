@@ -2,7 +2,7 @@ function Home(): JSX.Element {
     return (
         <div className="flex flex-col text-center justify-center">
             <h1 className="font-bold text-4xl mb-12">Ball IL</h1>
-            <p className="w-1/2 self-center">
+            <p className="w-1/2 text-left self-center">
                 Ball IL er et anerkjent breddeidrettslag som har satt sitt preg på lokalsamfunnet med sitt engasjement og
                 dedikasjon til idrett. Historien om Ball IL er en fortelling om hardt arbeid, samhold og lidenskap for sport.
                 <br />

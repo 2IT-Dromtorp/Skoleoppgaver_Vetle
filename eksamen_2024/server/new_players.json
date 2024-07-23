@@ -1,0 +1,27 @@
+[
+    {
+        "username": "Andreas Rovde",
+        "activeSports": ["Volleyball", "fotball"],
+        "password": "Skole123"
+    },
+    {
+        "username": "Chen Alexander",
+        "activeSports": ["håndball", "fotball", "volleyball"],
+        "password": "Skole123"
+    },
+    {
+        "username": "Kristoffer Bekkevold",
+        "activeSports": ["Volleyball"],
+        "password": "Skole123"
+    },
+    {
+        "username": "Matheo Kant",
+        "activeSports": ["fotball"],
+        "password": "Skole123"
+    },
+    {
+        "username": "Philip Beyer",
+        "activeSports": ["håndball", "fotball"],
+        "password": "Skole123"
+    }
+]

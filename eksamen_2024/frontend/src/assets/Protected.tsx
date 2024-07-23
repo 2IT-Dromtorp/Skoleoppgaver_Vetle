@@ -12,8 +12,11 @@ function Protected(): JSX.Element {
                 const res = await axios.get("/api/check-auth", {
                     headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
-                if (res.data) {
+                if (res.data.isAdmin) {
                     setHasAccess(true);
+                    setIsLoading(false);
+                } else {
+                    setHasAccess(false);
                     setIsLoading(false);
                 }
             } catch (err) {

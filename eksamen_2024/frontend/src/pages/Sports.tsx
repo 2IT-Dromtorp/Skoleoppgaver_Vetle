@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 import axios from "axios";
-import { sport } from "../assets/types";
+import { TUser, sport } from "../assets/types";
 import { Link } from "react-router-dom";
 
 function Sports(): JSX.Element {
+    const [user, setUser] = useState<TUser>();
     const [allSports, setAllSports] = useState<sport[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -18,7 +19,8 @@ function Sports(): JSX.Element {
                 const authRes = await axios.get("/api/check-auth", {
                     headers: { authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
-                if (authRes.data) {
+                setUser(authRes.data);
+                if (authRes.data.isAdmin) {
                     setIsAdmin(true);
                 }
             } catch (err) {
@@ -41,7 +43,7 @@ function Sports(): JSX.Element {
                                 <h2 className="font-semibold text-xl mb-2">{sport.name}</h2>
                                 <p className="m-2">{sport.description}</p>
                                 <p className="m-2">Medlemmer: {sport.members}</p>
-                                {!isAdmin && (
+                                {!isAdmin && !user?.activeSports.some((activeSport) => activeSport == sport.name) && (
                                     <Link to={`/send-request/${sport.name.toLowerCase()}`}>
                                         <button className="px-2 py-3 mt-2">Spør om å bli med</button>
                                     </Link>
